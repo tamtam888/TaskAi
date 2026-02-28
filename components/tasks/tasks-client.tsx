@@ -51,6 +51,7 @@ import { createTaskColumns } from "./columns";
 import { CreateProjectDialog } from "./create-project-dialog";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
+import { getTodayString, isPastDate } from "@/lib/date-utils";
 import type { Project, TaskWithDetails } from "@/lib/types";
 import {
   STATUS_LABELS,
@@ -58,10 +59,6 @@ import {
   PRIORITY_LABELS,
   PRIORITY_COLORS,
 } from "@/lib/types";
-
-function getTodayString() {
-  return new Date().toISOString().split("T")[0];
-}
 
 interface TasksClientProps {
   initialTasks: TaskWithDetails[];
@@ -92,7 +89,7 @@ function TaskMobileCard({
 
   const isOverdue =
     task.due_date &&
-    task.due_date < getTodayString() &&
+    isPastDate(task.due_date) &&
     task.status !== "done";
 
   const saveTitle = async () => {
@@ -294,7 +291,7 @@ function TaskMobileCard({
             min={getTodayString()}
             onChange={(e) => {
               const newDate = e.target.value;
-              if (newDate && newDate < getTodayString()) return;
+              if (newDate && isPastDate(newDate)) return; // guard: reject past dates
               onUpdate(task.id, { due_date: newDate || null });
             }}
             className={cn(
@@ -394,7 +391,7 @@ export function TasksClient({
 
   const handleUpdateTask = useCallback(
     async (id: string, updates: Partial<TaskWithDetails>) => {
-      if (updates.due_date && updates.due_date < getTodayString()) {
+      if (updates.due_date && isPastDate(updates.due_date)) {
         toast.error("לא ניתן לקבוע תאריך יעד בעבר");
         return;
       }

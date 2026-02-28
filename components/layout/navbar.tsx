@@ -4,7 +4,7 @@ import { useState } from "react";
 import Link from "next/link";
 import { useRouter, usePathname } from "next/navigation";
 import { toast } from "sonner";
-import { LogOut, LayoutDashboard, CheckSquare, Loader2, Sparkles } from "lucide-react";
+import { LogOut, LayoutDashboard, CheckSquare, Loader2, Sparkles, FolderOpen } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
@@ -55,6 +55,18 @@ export function Navbar() {
             >
               <CheckSquare className="h-4 w-4" />
               משימות
+            </Link>
+            <Link
+              href="/projects"
+              className={cn(
+                "flex items-center gap-2 px-4 py-2 rounded-xl text-sm font-medium transition-all",
+                pathname === "/projects"
+                  ? "bg-violet-100 text-violet-700 shadow-sm"
+                  : "text-slate-500 hover:bg-violet-50 hover:text-violet-700"
+              )}
+            >
+              <FolderOpen className="h-4 w-4" />
+              פרויקטים
             </Link>
             <Link
               href="/dashboard"

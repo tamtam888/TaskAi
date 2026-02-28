@@ -26,6 +26,7 @@ import {
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
 import { cn } from "@/lib/utils";
+import { getTodayString, isPastDate } from "@/lib/date-utils";
 import { CreateProjectDialog } from "./create-project-dialog";
 import type { Project, TaskWithDetails } from "@/lib/types";
 import {
@@ -34,10 +35,6 @@ import {
   STATUS_COLORS,
   PRIORITY_COLORS,
 } from "@/lib/types";
-
-function getTodayString() {
-  return new Date().toISOString().split("T")[0];
-}
 
 interface ColumnOptions {
   projects: Project[];
@@ -363,7 +360,7 @@ export function createTaskColumns({
         const value = info.row.original.due_date;
         const isOverdue =
           value &&
-          value < getTodayString() &&
+          isPastDate(value) &&
           info.row.original.status !== "done";
         return (
           <input
@@ -373,7 +370,7 @@ export function createTaskColumns({
             min={getTodayString()}
             onChange={(e) => {
               const newDate = e.target.value;
-              if (newDate && newDate < getTodayString()) return; // guard
+              if (newDate && isPastDate(newDate)) return; // guard: reject past dates
               onUpdate(info.row.original.id, {
                 due_date: newDate || null,
               });

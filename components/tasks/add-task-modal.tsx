@@ -28,10 +28,7 @@ import {
 import { createClient } from "@/lib/supabase/client";
 import { CreateProjectDialog } from "./create-project-dialog";
 import type { Project, TaskWithDetails } from "@/lib/types";
-
-function getTodayString() {
-  return new Date().toISOString().split("T")[0];
-}
+import { getTodayString, isTodayOrFuture } from "@/lib/date-utils";
 
 const taskSchema = z.object({
   title: z.string().min(1, "כותרת היא שדה חובה"),
@@ -43,7 +40,7 @@ const taskSchema = z.object({
     .string()
     .optional()
     .refine(
-      (val) => !val || val >= getTodayString(),
+      (val) => !val || isTodayOrFuture(val),
       "תאריך יעד חייב להיות היום או בעתיד"
     ),
 });

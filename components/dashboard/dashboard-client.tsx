@@ -25,6 +25,7 @@ import {
 } from "lucide-react";
 import type { Task } from "@/lib/types";
 import { PRIORITY_LABELS } from "@/lib/types";
+import { isPastDate } from "@/lib/date-utils";
 
 interface DashboardClientProps {
   tasks: Task[];
@@ -43,10 +44,8 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
     const inProgress = tasks.filter((t) => t.status === "in_progress").length;
     const completionPct = total > 0 ? Math.round((done / total) * 100) : 0;
 
-    const now = new Date();
-    now.setHours(0, 0, 0, 0);
     const overdue = tasks.filter(
-      (t) => t.due_date && new Date(t.due_date) < now && t.status !== "done"
+      (t) => t.due_date && isPastDate(t.due_date) && t.status !== "done"
     ).length;
 
     // Priority breakdown
