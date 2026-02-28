@@ -420,6 +420,7 @@ export function createTaskColumns({
             <Button
               variant="ghost"
               size="icon"
+              aria-label="מחק משימה"
               className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50"
             >
               <Trash2 className="h-4 w-4" />

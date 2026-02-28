@@ -35,3 +35,16 @@ export function isPastDate(dateStr: string): boolean {
 export function isTodayOrFuture(dateStr: string): boolean {
   return dateStr >= getTodayString();
 }
+
+/**
+ * Returns the local-calendar date N days from today as a YYYY-MM-DD string.
+ * Uses the same local-time approach as getTodayString to avoid UTC edge cases.
+ */
+export function getDateInNDays(n: number): string {
+  const d = new Date();
+  d.setDate(d.getDate() + n);
+  const y = d.getFullYear();
+  const m = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${y}-${m}-${day}`;
+}

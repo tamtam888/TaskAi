@@ -25,6 +25,9 @@ export default async function TasksPage() {
       .order("name", { ascending: true }),
   ]);
 
+  if (tasksResult.error) throw tasksResult.error;
+  if (projectsResult.error) throw projectsResult.error;
+
   const rawTasks = tasksResult.data || [];
   const projects = projectsResult.data || [];
   const tags = tagsResult.data || [];

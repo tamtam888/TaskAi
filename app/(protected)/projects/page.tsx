@@ -14,6 +14,8 @@ export default async function ProjectsPage() {
       .not("project_id", "is", null),
   ]);
 
+  if (projectsResult.error) throw projectsResult.error;
+
   const projects = projectsResult.data || [];
   const taskRows = tasksResult.data || [];
 

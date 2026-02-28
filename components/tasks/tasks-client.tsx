@@ -16,7 +16,7 @@ import { he } from "date-fns/locale";
 import { toast } from "sonner";
 import {
   Search, Plus, ChevronRight, ChevronLeft,
-  Trash2, Pencil, Check, X,
+  Trash2, Pencil, Check, X, Sparkles, Zap,
 } from "lucide-react";
 import {
   Table,
@@ -51,7 +51,7 @@ import { createTaskColumns } from "./columns";
 import { CreateProjectDialog } from "./create-project-dialog";
 import { createClient } from "@/lib/supabase/client";
 import { cn } from "@/lib/utils";
-import { getTodayString, isPastDate } from "@/lib/date-utils";
+import { getTodayString, isPastDate, getDateInNDays } from "@/lib/date-utils";
 import type { Project, TaskWithDetails } from "@/lib/types";
 import {
   STATUS_LABELS,
@@ -66,8 +66,113 @@ interface TasksClientProps {
   tags?: unknown[];
 }
 
-// ─── Columns that are condensed on tablet (hidden below lg) ──────────────────
+// ─── Constants ────────────────────────────────────────────────────────────────
 const TABLET_HIDDEN_COLS = new Set(["created_at"]);
+const OVERLOAD_THRESHOLD = 7;
+const PRIORITY_ORDER: Record<string, number> = { high: 0, medium: 1, low: 2 };
+
+type QuickFilter = "all" | "today" | "upcoming" | "overdue";
+
+// ─── Smart default sort ───────────────────────────────────────────────────────
+// Not-done before done → nearest due date first → null due dates last.
+function smartSort(a: TaskWithDetails, b: TaskWithDetails): number {
+  const doneA = a.status === "done" ? 1 : 0;
+  const doneB = b.status === "done" ? 1 : 0;
+  if (doneA !== doneB) return doneA - doneB;
+  // Both done or both not-done: sort by due_date ascending (null = last)
+  if (!a.due_date && !b.due_date) return 0;
+  if (!a.due_date) return 1;
+  if (!b.due_date) return -1;
+  return a.due_date.localeCompare(b.due_date);
+}
+
+// ─── Focus task card ──────────────────────────────────────────────────────────
+function FocusTaskCard({
+  rank,
+  task,
+  onUpdate,
+}: {
+  rank: number;
+  task: TaskWithDetails;
+  onUpdate: (id: string, updates: Partial<TaskWithDetails>) => Promise<void>;
+}) {
+  const today = getTodayString();
+  const isOverdue = task.due_date && isPastDate(task.due_date);
+  const isDueToday = task.due_date === today;
+  const isDone = task.status === "done";
+
+  return (
+    <div
+      className={cn(
+        "relative rounded-2xl border p-4 space-y-3 transition-all",
+        isDone
+          ? "bg-green-50 border-green-200 opacity-70"
+          : "bg-white border-violet-200 shadow-sm"
+      )}
+    >
+      {/* Rank badge */}
+      <span className="absolute top-3 left-3 h-5 w-5 rounded-full bg-violet-100 text-violet-600 text-[10px] font-bold flex items-center justify-center">
+        {rank}
+      </span>
+
+      {/* Title */}
+      <p className={cn(
+        "text-sm font-semibold pr-1 pl-7 leading-snug line-clamp-2",
+        isDone ? "line-through text-slate-400" : "text-slate-800"
+      )}>
+        {task.title}
+      </p>
+
+      {/* Priority + due date */}
+      <div className="flex items-center gap-2 flex-wrap">
+        <span className={cn(
+          "px-2 py-0.5 rounded-full text-xs font-medium",
+          PRIORITY_COLORS[task.priority]
+        )}>
+          {PRIORITY_LABELS[task.priority]}
+        </span>
+        {task.due_date && (
+          <span className={cn(
+            "text-xs px-2 py-0.5 rounded-full font-medium",
+            isOverdue
+              ? "bg-red-100 text-red-700"
+              : isDueToday
+              ? "bg-amber-100 text-amber-700"
+              : "bg-slate-100 text-slate-600"
+          )}>
+            {isOverdue ? "באיחור · " : isDueToday ? "היום · " : ""}
+            {format(new Date(task.due_date + "T00:00:00"), "d MMM", { locale: he })}
+          </span>
+        )}
+      </div>
+
+      {/* Status selector */}
+      <Select
+        value={task.status}
+        onValueChange={(v) =>
+          onUpdate(task.id, { status: v as TaskWithDetails["status"] })
+        }
+      >
+        <SelectTrigger className="h-7 text-xs border-0 bg-slate-50 hover:bg-violet-50 rounded-full px-3 shadow-none w-full">
+          <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS[task.status])}>
+            {STATUS_LABELS[task.status]}
+          </span>
+        </SelectTrigger>
+        <SelectContent>
+          <SelectItem value="backlog">
+            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">רשימת המתנה</span>
+          </SelectItem>
+          <SelectItem value="in_progress">
+            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">בביצוע</span>
+          </SelectItem>
+          <SelectItem value="done">
+            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">הושלם</span>
+          </SelectItem>
+        </SelectContent>
+      </Select>
+    </div>
+  );
+}
 
 // ─── Mobile task card (< 640 px) ─────────────────────────────────────────────
 function TaskMobileCard({
@@ -157,6 +262,7 @@ function TaskMobileCard({
                 variant="ghost"
                 size="icon"
                 onClick={() => setEditingTitle(true)}
+                aria-label="ערוך כותרת"
                 className="h-7 w-7 flex-shrink-0 text-slate-300 hover:text-violet-500 hover:bg-violet-50 rounded-lg"
               >
                 <Pencil className="h-3.5 w-3.5" />
@@ -166,6 +272,7 @@ function TaskMobileCard({
                   <Button
                     variant="ghost"
                     size="icon"
+                    aria-label="מחק משימה"
                     className="h-7 w-7 flex-shrink-0 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
@@ -247,7 +354,6 @@ function TaskMobileCard({
 
         {/* ── Project + Due date ── */}
         <div className="flex items-center gap-2 flex-wrap">
-          {/* Project select */}
           <Select
             value={task.project_id || "none"}
             onValueChange={(v) => {
@@ -283,7 +389,6 @@ function TaskMobileCard({
             </SelectContent>
           </Select>
 
-          {/* Due date */}
           <input
             type="date"
             dir="ltr"
@@ -291,7 +396,7 @@ function TaskMobileCard({
             min={getTodayString()}
             onChange={(e) => {
               const newDate = e.target.value;
-              if (newDate && isPastDate(newDate)) return; // guard: reject past dates
+              if (newDate && isPastDate(newDate)) return;
               onUpdate(task.id, { due_date: newDate || null });
             }}
             className={cn(
@@ -305,7 +410,6 @@ function TaskMobileCard({
         </div>
       </div>
 
-      {/* Create-project dialog for mobile card */}
       <CreateProjectDialog
         open={createProjectOpen}
         onOpenChange={setCreateProjectOpen}
@@ -373,6 +477,8 @@ export function TasksClient({
   const [sorting, setSorting] = useState<SortingState>([]);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [globalFilter, setGlobalFilter] = useState("");
+  const [quickFilter, setQuickFilter] = useState<QuickFilter>("all");
+  const [focusMode, setFocusMode] = useState(false);
 
   const handleProjectCreated = useCallback((project: Project) => {
     setProjects((prev) => [...prev, project]);
@@ -438,6 +544,64 @@ export function TasksClient({
     [projects]
   );
 
+  // ── Smart-filtered + default-sorted data for the table ──────────────────────
+  const displayTasks = useMemo(() => {
+    const today = getTodayString();
+    const in7Days = getDateInNDays(7);
+
+    let filtered: TaskWithDetails[];
+    if (quickFilter === "today") {
+      filtered = tasks.filter(
+        (t) => t.due_date === today && t.status !== "done"
+      );
+    } else if (quickFilter === "upcoming") {
+      // next 7 days inclusive of today, not-done only
+      filtered = tasks.filter(
+        (t) =>
+          t.due_date &&
+          t.due_date >= today &&
+          t.due_date <= in7Days &&
+          t.status !== "done"
+      );
+    } else if (quickFilter === "overdue") {
+      // past due date, not yet done
+      filtered = tasks.filter(
+        (t) => t.due_date && t.due_date < today && t.status !== "done"
+      );
+    } else {
+      filtered = tasks;
+    }
+
+    // Apply smart default sort only when user hasn't manually sorted a column.
+    // When sorting.length > 0 TanStack Table's getSortedRowModel takes over.
+    if (sorting.length === 0) {
+      return [...filtered].sort(smartSort);
+    }
+    return filtered;
+  }, [tasks, quickFilter, sorting]);
+
+  // ── Focus mode: top 3 not-done tasks by priority → nearest due date ─────────
+  const focusTasks = useMemo(() => {
+    return [...tasks]
+      .filter((t) => t.status !== "done")
+      .sort((a, b) => {
+        const pa = PRIORITY_ORDER[a.priority] ?? 99;
+        const pb = PRIORITY_ORDER[b.priority] ?? 99;
+        if (pa !== pb) return pa - pb;
+        if (!a.due_date && !b.due_date) return 0;
+        if (!a.due_date) return 1;
+        if (!b.due_date) return -1;
+        return a.due_date.localeCompare(b.due_date);
+      })
+      .slice(0, 3);
+  }, [tasks]);
+
+  // ── Overload hint: how many undone tasks are due today ──────────────────────
+  const todayTaskCount = useMemo(() => {
+    const today = getTodayString();
+    return tasks.filter((t) => t.due_date === today && t.status !== "done").length;
+  }, [tasks]);
+
   const columns = useMemo(
     () =>
       createTaskColumns({
@@ -450,7 +614,7 @@ export function TasksClient({
   );
 
   const table = useReactTable({
-    data: tasks,
+    data: displayTasks,
     columns,
     state: { sorting, columnFilters, globalFilter },
     onSortingChange: setSorting,
@@ -477,8 +641,20 @@ export function TasksClient({
     onNext: () => table.nextPage(),
   };
 
+  const handleQuickFilter = (f: QuickFilter) => {
+    setQuickFilter(f);
+    table.setPageIndex(0);
+  };
+
+  const QUICK_FILTER_LABELS: Record<QuickFilter, string> = {
+    all: "הכל",
+    today: "היום",
+    upcoming: "שבוע קרוב",
+    overdue: "באיחור",
+  };
+
   return (
-    <div className="space-y-4 sm:space-y-6">
+    <div className="space-y-4 sm:space-y-5">
 
       {/* ── Header ── */}
       <div className="flex items-center justify-between gap-3">
@@ -497,6 +673,26 @@ export function TasksClient({
         />
       </div>
 
+      {/* ── Overload hint ── */}
+      {todayTaskCount > OVERLOAD_THRESHOLD && !focusMode && (
+        <div className="flex items-center justify-between gap-3 bg-violet-50 border border-violet-200 rounded-2xl px-4 py-3 flex-wrap">
+          <div className="flex items-center gap-3">
+            <Zap className="h-4 w-4 text-violet-500 flex-shrink-0" />
+            <p className="text-sm text-violet-800">
+              נראה שיש הרבה משימות להיום. אולי כדאי לבחור 3 למשימות מרכזיות?
+            </p>
+          </div>
+          <Button
+            size="sm"
+            onClick={() => setFocusMode(true)}
+            className="rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs flex-shrink-0"
+          >
+            <Sparkles className="h-3.5 w-3.5 ml-1" />
+            הפעל מצב פוקוס
+          </Button>
+        </div>
+      )}
+
       {/* ── Search bar ── */}
       <div className="bg-white rounded-2xl border border-violet-100 shadow-sm p-3">
         <div className="relative w-full sm:max-w-sm">
@@ -510,13 +706,96 @@ export function TasksClient({
         </div>
       </div>
 
+      {/* ── Filter chips + Focus mode button ── */}
+      <div className="flex items-center justify-between gap-3 flex-wrap">
+        {/* Quick filter pills */}
+        <div className="flex items-center gap-2">
+          {(["all", "today", "upcoming", "overdue"] as QuickFilter[]).map((f) => (
+            <button
+              key={f}
+              onClick={() => handleQuickFilter(f)}
+              className={cn(
+                "px-3 py-1.5 rounded-full text-xs font-medium transition-all border",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-1",
+                quickFilter === f
+                  ? "bg-violet-600 text-white border-violet-600 shadow-sm"
+                  : "bg-white text-slate-600 border-violet-100 hover:border-violet-300 hover:bg-violet-50"
+              )}
+            >
+              {QUICK_FILTER_LABELS[f]}
+            </button>
+          ))}
+        </div>
+
+        {/* Focus mode toggle */}
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => setFocusMode((f) => !f)}
+          className={cn(
+            "gap-1.5 rounded-full text-xs font-medium border transition-all",
+            focusMode
+              ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-700 hover:text-white"
+              : "border-violet-200 text-violet-700 hover:bg-violet-50"
+          )}
+        >
+          <Sparkles className="h-3.5 w-3.5" />
+          מצב פוקוס
+        </Button>
+      </div>
+
+      {/* ── Focus mode panel ── */}
+      {focusMode && (
+        <div className="bg-gradient-to-br from-violet-50 to-white rounded-2xl border border-violet-200 shadow-sm p-5 space-y-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <Sparkles className="h-4 w-4 text-violet-500" />
+              <h2 className="text-sm font-semibold text-slate-800">
+                3 המשימות הדחופות ביותר
+              </h2>
+            </div>
+            <button
+              onClick={() => setFocusMode(false)}
+              aria-label="צא ממצב פוקוס"
+              className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 rounded"
+            >
+              <X className="h-3.5 w-3.5" />
+              צא ממצב פוקוס
+            </button>
+          </div>
+
+          {focusTasks.length === 0 ? (
+            <div className="py-6 text-center">
+              <p className="text-2xl mb-2">🎉</p>
+              <p className="text-sm font-medium text-slate-700">כל המשימות הושלמו!</p>
+              <p className="text-xs text-slate-400 mt-0.5">אין משימות פתוחות כרגע</p>
+            </div>
+          ) : (
+            <div className="grid gap-3 sm:grid-cols-3">
+              {focusTasks.map((task, i) => (
+                <FocusTaskCard
+                  key={task.id}
+                  rank={i + 1}
+                  task={task}
+                  onUpdate={handleUpdateTask}
+                />
+              ))}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* ── Mobile cards (< sm = 640 px) ── */}
       <div className="sm:hidden space-y-3">
         {visibleRows.length === 0 ? (
           <div className="bg-white rounded-2xl border border-violet-100 p-10 text-center text-slate-400 shadow-sm">
             <Plus className="h-8 w-8 text-violet-200 mx-auto mb-2" />
-            <p className="font-medium">אין משימות עדיין</p>
-            <p className="text-xs mt-1">לחץ על &quot;משימה חדשה&quot; להתחיל</p>
+            <p className="font-medium">אין משימות להצגה</p>
+            <p className="text-xs mt-1">
+              {quickFilter !== "all"
+                ? "נסה לשנות את הסינון"
+                : 'לחץ על "משימה חדשה" להתחיל'}
+            </p>
           </div>
         ) : (
           visibleRows.map((row) => (
@@ -530,15 +809,13 @@ export function TasksClient({
             />
           ))
         )}
-        {/* Mobile pagination — always shown for orientation */}
         <div className="bg-white rounded-2xl border border-violet-100 shadow-sm overflow-hidden">
           <PaginationBar {...paginationProps} />
         </div>
       </div>
 
-      {/* ── Table (≥ sm = 640 px): tablet condensed + desktop full ── */}
+      {/* ── Table (≥ sm = 640 px) ── */}
       <div className="hidden sm:block bg-white rounded-2xl border border-violet-100 shadow-sm overflow-hidden">
-        {/* Horizontal scroll on tablet so table never breaks layout */}
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
@@ -553,7 +830,6 @@ export function TasksClient({
                       style={{ width: header.getSize() }}
                       className={cn(
                         "font-semibold text-slate-600 whitespace-nowrap",
-                        // Hide low-priority columns on tablet (640-1023 px)
                         TABLET_HIDDEN_COLS.has(header.column.id) && "hidden lg:table-cell"
                       )}
                     >
@@ -598,8 +874,12 @@ export function TasksClient({
                   >
                     <div className="flex flex-col items-center gap-2">
                       <Plus className="h-8 w-8 text-violet-200" />
-                      <p className="font-medium">אין משימות עדיין</p>
-                      <p className="text-xs">לחץ על &quot;משימה חדשה&quot; להתחיל</p>
+                      <p className="font-medium">אין משימות להצגה</p>
+                      <p className="text-xs">
+                        {quickFilter !== "all"
+                          ? "נסה לשנות את הסינון"
+                          : 'לחץ על "משימה חדשה" להתחיל'}
+                      </p>
                     </div>
                   </TableCell>
                 </TableRow>

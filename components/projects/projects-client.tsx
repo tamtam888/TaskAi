@@ -188,7 +188,7 @@ function ProjectRow({
             variant="ghost"
             className="h-8 w-8 text-slate-400 hover:text-violet-600 hover:bg-violet-50"
             onClick={() => setEditing(true)}
-            title="שנה שם"
+            aria-label="שנה שם פרויקט"
           >
             <Pencil className="h-4 w-4" />
           </Button>
@@ -199,7 +199,7 @@ function ProjectRow({
                 size="icon"
                 variant="ghost"
                 className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50"
-                title="מחק פרויקט"
+                aria-label="מחק פרויקט"
               >
                 <Trash2 className="h-4 w-4" />
               </Button>
