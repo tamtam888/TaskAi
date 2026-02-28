@@ -97,7 +97,7 @@ function EditableTitleCell({
 
   return (
     <span
-      className="cursor-pointer hover:text-purple-600 font-medium text-slate-900 min-w-[150px] block"
+      className="cursor-pointer hover:text-violet-600 font-medium text-slate-900 min-w-[150px] block"
       onClick={() => setEditing(true)}
       title="לחץ לעריכה"
     >
@@ -134,19 +134,36 @@ function ProjectSelectCell({
           }
         }}
       >
-        <SelectTrigger className="h-8 text-xs border-0 bg-transparent shadow-none hover:bg-purple-50 w-[130px]">
+        <SelectTrigger
+          className={cn(
+            "relative h-9 w-[150px] rounded-full border border-violet-200 bg-violet-50",
+            "text-xs text-violet-700 font-medium shadow-none justify-center",
+            "hover:bg-violet-100 hover:border-violet-300",
+            "focus:ring-2 focus:ring-violet-300 focus:ring-offset-0",
+            "[&>span]:truncate [&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
+          )}
+        >
           <SelectValue placeholder="ללא פרויקט" />
         </SelectTrigger>
-        <SelectContent>
-          <SelectItem value="none">ללא פרויקט</SelectItem>
+        <SelectContent align="center">
+          <SelectItem
+            value="none"
+            className="justify-center text-center px-3 data-[state=checked]:bg-violet-100 data-[state=checked]:text-violet-700"
+          >
+            ללא פרויקט
+          </SelectItem>
           {projects.map((p) => (
-            <SelectItem key={p.id} value={p.id}>
+            <SelectItem
+              key={p.id}
+              value={p.id}
+              className="justify-center text-center px-3 data-[state=checked]:bg-violet-100 data-[state=checked]:text-violet-700"
+            >
               {p.name}
             </SelectItem>
           ))}
           <SelectItem
             value="new_project"
-            className="text-purple-600 font-medium border-t mt-1 pt-2"
+            className="justify-center text-center px-3 text-violet-600 font-medium border-t mt-1 pt-2"
           >
             + צור פרויקט חדש
           </SelectItem>
@@ -229,7 +246,13 @@ export function createTaskColumns({
             onUpdate(info.row.original.id, { status: v as TaskWithDetails["status"] })
           }
         >
-          <SelectTrigger className="h-8 text-xs border-0 bg-transparent shadow-none hover:bg-purple-50 w-[120px]">
+          <SelectTrigger
+            className={cn(
+              "relative h-8 w-[120px] text-xs border-0 bg-transparent shadow-none",
+              "justify-center hover:bg-violet-50",
+              "[&>svg]:absolute [&>svg]:left-1.5 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
+            )}
+          >
             <span
               className={cn(
                 "px-2 py-0.5 rounded-full text-xs font-medium",
@@ -239,18 +262,18 @@ export function createTaskColumns({
               {STATUS_LABELS[info.row.original.status]}
             </span>
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="backlog">
+          <SelectContent align="center">
+            <SelectItem value="backlog" className="justify-center text-center px-3">
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
                 רשימת המתנה
               </span>
             </SelectItem>
-            <SelectItem value="in_progress">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-purple-100 text-purple-700">
+            <SelectItem value="in_progress" className="justify-center text-center px-3">
+              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">
                 בביצוע
               </span>
             </SelectItem>
-            <SelectItem value="done">
+            <SelectItem value="done" className="justify-center text-center px-3">
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
                 הושלם
               </span>
@@ -284,7 +307,13 @@ export function createTaskColumns({
             })
           }
         >
-          <SelectTrigger className="h-8 text-xs border-0 bg-transparent shadow-none hover:bg-purple-50 w-[100px]">
+          <SelectTrigger
+            className={cn(
+              "relative h-8 w-[100px] text-xs border-0 bg-transparent shadow-none",
+              "justify-center hover:bg-violet-50",
+              "[&>svg]:absolute [&>svg]:left-1.5 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
+            )}
+          >
             <span
               className={cn(
                 "px-2 py-0.5 rounded-full text-xs font-medium",
@@ -294,18 +323,18 @@ export function createTaskColumns({
               {PRIORITY_LABELS[info.row.original.priority]}
             </span>
           </SelectTrigger>
-          <SelectContent>
-            <SelectItem value="low">
+          <SelectContent align="center">
+            <SelectItem value="low" className="justify-center text-center px-3">
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
                 נמוכה
               </span>
             </SelectItem>
-            <SelectItem value="medium">
+            <SelectItem value="medium" className="justify-center text-center px-3">
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
                 בינונית
               </span>
             </SelectItem>
-            <SelectItem value="high">
+            <SelectItem value="high" className="justify-center text-center px-3">
               <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
                 גבוהה
               </span>
@@ -350,7 +379,7 @@ export function createTaskColumns({
               });
             }}
             className={cn(
-              "text-xs border rounded-lg px-2 py-1 bg-transparent focus:outline-none focus:ring-1 focus:ring-purple-400 w-[130px]",
+              "text-xs border rounded-lg px-2 py-1 bg-transparent focus:outline-none focus:ring-1 focus:ring-violet-400 w-[130px]",
               isOverdue ? "text-red-600 border-red-300" : "text-slate-600"
             )}
           />

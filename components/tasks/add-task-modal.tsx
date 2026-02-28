@@ -150,7 +150,7 @@ export function AddTaskModal({ projects, onTaskAdded, onProjectCreated }: AddTas
     <>
       <Dialog open={open} onOpenChange={handleOpenChange}>
         <DialogTrigger asChild>
-          <Button className="gap-2 rounded-2xl px-6">
+          <Button className="gap-2 rounded-2xl px-6 bg-violet-600 hover:bg-violet-700 shadow-sm shadow-violet-200 font-semibold">
             <Plus className="h-4 w-4" />
             משימה חדשה
           </Button>
@@ -259,7 +259,7 @@ export function AddTaskModal({ projects, onTaskAdded, onProjectCreated }: AddTas
                         ))}
                         <SelectItem
                           value="new_project"
-                          className="text-purple-600 font-medium border-t mt-1 pt-2"
+                          className="text-violet-600 font-medium border-t mt-1 pt-2"
                         >
                           + צור פרויקט חדש
                         </SelectItem>
@@ -286,7 +286,7 @@ export function AddTaskModal({ projects, onTaskAdded, onProjectCreated }: AddTas
             </div>
 
             <div className="flex justify-start gap-3 pt-2">
-              <Button type="submit" disabled={isLoading}>
+              <Button type="submit" disabled={isLoading} className="bg-violet-600 hover:bg-violet-700 rounded-xl">
                 {isLoading ? (
                   <>
                     <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -303,6 +303,7 @@ export function AddTaskModal({ projects, onTaskAdded, onProjectCreated }: AddTas
                   reset();
                   setOpen(false);
                 }}
+                className="rounded-xl border-violet-200 hover:bg-violet-50"
               >
                 ביטול
               </Button>

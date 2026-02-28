@@ -3,14 +3,17 @@ import Link from "next/link";
 
 export default function SignupPage() {
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-slate-100 p-4">
+    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-violet-50 to-violet-100/60 p-4">
       <div className="w-full max-w-md">
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-slate-900">משימות חכמות</h1>
-          <p className="text-slate-500 mt-2">ניהול משימות אישי</p>
+          <div className="inline-flex items-center justify-center h-12 w-12 rounded-2xl bg-violet-600 shadow-lg shadow-violet-200 mb-4">
+            <span className="text-white text-xl">✓</span>
+          </div>
+          <h1 className="text-3xl font-bold text-slate-900 tracking-tight">משימות חכמות</h1>
+          <p className="text-slate-500 mt-1.5">ניהול משימות אישי</p>
         </div>
-        <div className="bg-white rounded-2xl shadow-lg border border-slate-200 p-8">
-          <h2 className="text-2xl font-semibold text-slate-900 mb-6">
+        <div className="bg-white rounded-2xl shadow-xl shadow-violet-100 border border-violet-100 p-8">
+          <h2 className="text-xl font-semibold text-slate-900 mb-6">
             יצירת חשבון
           </h2>
           <SignupForm />
@@ -18,7 +21,7 @@ export default function SignupPage() {
             כבר יש לך חשבון?{" "}
             <Link
               href="/login"
-              className="text-blue-600 hover:text-blue-700 font-medium"
+              className="text-violet-600 hover:text-violet-700 font-semibold"
             >
               התחברות
             </Link>

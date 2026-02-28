@@ -55,8 +55,8 @@ export const PRIORITY_LABELS: Record<TaskPriority, string> = {
 };
 
 export const STATUS_COLORS: Record<TaskStatus, string> = {
-  backlog: "bg-slate-100 text-slate-700",
-  in_progress: "bg-purple-100 text-purple-700",
+  backlog: "bg-slate-100 text-slate-600",
+  in_progress: "bg-violet-100 text-violet-700",
   done: "bg-green-100 text-green-700",
 };
 
