@@ -1,6 +1,7 @@
 "use client";
 
 import { useMemo } from "react";
+import { useTheme } from "next-themes";
 import {
   PieChart,
   Pie,
@@ -38,6 +39,29 @@ const PRIORITY_CHART_COLORS: Record<string, string> = {
 };
 
 export function DashboardClient({ tasks }: DashboardClientProps) {
+  const { resolvedTheme } = useTheme();
+  const isDark = resolvedTheme === "dark";
+
+  const axisTickColorLight = "#94a3b8";
+  const axisTickColorDark = "hsl(220,10%,60%)";
+  const axisTickColor = isDark ? axisTickColorDark : axisTickColorLight;
+
+  const gridStroke = isDark ? "hsl(225,15%,24%)" : "#f1f0ff";
+
+  const tooltipStyle = isDark
+    ? {
+        borderRadius: "0.75rem",
+        border: "1px solid hsl(225,15%,24%)",
+        fontSize: "13px",
+        backgroundColor: "hsl(225,15%,18%)",
+        color: "hsl(220,14%,92%)",
+      }
+    : {
+        borderRadius: "0.75rem",
+        border: "1px solid #ede9fe",
+        fontSize: "13px",
+      };
+
   const stats = useMemo(() => {
     const total = tasks.length;
     const done = tasks.filter((t) => t.status === "done").length;
@@ -91,10 +115,10 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
 
       {/* ── Header ── */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
           לוח מחוונים
         </h1>
-        <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+        <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
           סקירה כללית של המשימות שלך
         </p>
       </div>
@@ -103,25 +127,25 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
 
         {/* Completion % */}
-        <Card className="border border-violet-100 shadow-sm bg-white">
+        <Card className="border border-border shadow-sm bg-card">
           <CardHeader className="pb-2 pt-4 px-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 אחוז השלמה
               </CardTitle>
-              <div className="h-9 w-9 rounded-xl bg-green-50 flex items-center justify-center flex-shrink-0">
+              <div className="h-9 w-9 rounded-xl bg-green-500/10 flex items-center justify-center flex-shrink-0">
                 <CheckCircle2 className="h-5 w-5 text-green-500" />
               </div>
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <div className="text-3xl font-bold text-slate-900">
+            <div className="text-3xl font-bold text-foreground">
               {stats.completionPct}%
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {stats.done} מתוך {stats.total} הושלמו
             </p>
-            <div className="mt-3 h-1.5 bg-slate-100 rounded-full overflow-hidden">
+            <div className="mt-3 h-1.5 bg-muted rounded-full overflow-hidden">
               <div
                 className="h-full bg-green-500 rounded-full transition-all duration-700"
                 style={{ width: `${stats.completionPct}%` }}
@@ -131,68 +155,68 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
         </Card>
 
         {/* Overdue */}
-        <Card className="border border-violet-100 shadow-sm bg-white">
+        <Card className="border border-border shadow-sm bg-card">
           <CardHeader className="pb-2 pt-4 px-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 באיחור
               </CardTitle>
-              <div className="h-9 w-9 rounded-xl bg-red-50 flex items-center justify-center flex-shrink-0">
-                <AlertTriangle className="h-5 w-5 text-red-500" />
+              <div className="h-9 w-9 rounded-xl bg-destructive/10 flex items-center justify-center flex-shrink-0">
+                <AlertTriangle className="h-5 w-5 text-destructive" />
               </div>
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-4">
             <div
               className={`text-3xl font-bold ${
-                stats.overdue > 0 ? "text-red-600" : "text-slate-900"
+                stats.overdue > 0 ? "text-destructive" : "text-foreground"
               }`}
             >
               {stats.overdue}
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">
+            <p className="text-xs text-muted-foreground mt-0.5">
               {stats.overdue === 0 ? "הכל בזמן" : "עברו את תאריך היעד"}
             </p>
           </CardContent>
         </Card>
 
         {/* Total Tasks */}
-        <Card className="border border-violet-100 shadow-sm bg-white">
+        <Card className="border border-border shadow-sm bg-card">
           <CardHeader className="pb-2 pt-4 px-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 סה&quot;כ משימות
               </CardTitle>
-              <div className="h-9 w-9 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0">
-                <ListTodo className="h-5 w-5 text-violet-500" />
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <ListTodo className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <div className="text-3xl font-bold text-slate-900">
+            <div className="text-3xl font-bold text-foreground">
               {stats.total}
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">כלל המשימות</p>
+            <p className="text-xs text-muted-foreground mt-0.5">כלל המשימות</p>
           </CardContent>
         </Card>
 
         {/* In Progress */}
-        <Card className="border border-violet-100 shadow-sm bg-white">
+        <Card className="border border-border shadow-sm bg-card">
           <CardHeader className="pb-2 pt-4 px-4">
             <div className="flex items-center justify-between">
-              <CardTitle className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <CardTitle className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 בביצוע
               </CardTitle>
-              <div className="h-9 w-9 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0">
-                <Loader className="h-5 w-5 text-violet-500" />
+              <div className="h-9 w-9 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <Loader className="h-5 w-5 text-primary" />
               </div>
             </div>
           </CardHeader>
           <CardContent className="px-4 pb-4">
-            <div className="text-3xl font-bold text-slate-900">
+            <div className="text-3xl font-bold text-foreground">
               {stats.inProgress}
             </div>
-            <p className="text-xs text-slate-400 mt-0.5">משימות פעילות</p>
+            <p className="text-xs text-muted-foreground mt-0.5">משימות פעילות</p>
           </CardContent>
         </Card>
       </div>
@@ -201,20 +225,20 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 sm:gap-6">
 
         {/* Priority Pie Chart */}
-        <Card className="border border-violet-100 shadow-sm bg-white">
+        <Card className="border border-border shadow-sm bg-card">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-violet-50 flex items-center justify-center flex-shrink-0">
-                <TrendingUp className="h-4 w-4 text-violet-500" />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <TrendingUp className="h-4 w-4 text-primary" />
               </div>
-              <CardTitle className="text-sm sm:text-base font-semibold text-slate-800">
+              <CardTitle className="text-sm sm:text-base font-semibold text-foreground">
                 משימות לפי עדיפות
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-3 sm:px-6">
             {stats.priorityData.length === 0 ? (
-              <div className="h-[220px] flex items-center justify-center text-slate-400 text-sm">
+              <div className="h-[220px] flex items-center justify-center text-muted-foreground text-sm">
                 אין נתונים להצגה
               </div>
             ) : (
@@ -228,21 +252,12 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
                     outerRadius={88}
                     paddingAngle={3}
                     dataKey="value"
-                    // No inline label — avoids overflow on narrow screens.
-                    // Tooltip + Legend handle the info instead.
                   >
                     {stats.priorityData.map((entry, index) => (
                       <Cell key={`cell-${index}`} fill={entry.color} />
                     ))}
                   </Pie>
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "0.75rem",
-                      border: "1px solid #ede9fe",
-                      fontSize: "13px",
-                    }}
-                    formatter={(value, name) => [value, name]}
-                  />
+                  <Tooltip contentStyle={tooltipStyle} formatter={(value, name) => [value, name]} />
                   <Legend
                     iconType="circle"
                     iconSize={10}
@@ -255,20 +270,20 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
         </Card>
 
         {/* Project Bar Chart */}
-        <Card className="border border-violet-100 shadow-sm bg-white">
+        <Card className="border border-border shadow-sm bg-card">
           <CardHeader className="pb-2">
             <div className="flex items-center gap-2">
-              <div className="h-8 w-8 rounded-lg bg-violet-50 flex items-center justify-center flex-shrink-0">
-                <FolderOpen className="h-4 w-4 text-violet-500" />
+              <div className="h-8 w-8 rounded-lg bg-primary/10 flex items-center justify-center flex-shrink-0">
+                <FolderOpen className="h-4 w-4 text-primary" />
               </div>
-              <CardTitle className="text-sm sm:text-base font-semibold text-slate-800">
+              <CardTitle className="text-sm sm:text-base font-semibold text-foreground">
                 משימות לפי פרויקט
               </CardTitle>
             </div>
           </CardHeader>
           <CardContent className="px-3 sm:px-6">
             {stats.projectData.length === 0 ? (
-              <div className="h-[220px] flex items-center justify-center text-slate-400 text-sm">
+              <div className="h-[220px] flex items-center justify-center text-muted-foreground text-sm">
                 אין נתונים להצגה
               </div>
             ) : (
@@ -281,34 +296,27 @@ export function DashboardClient({ tasks }: DashboardClientProps) {
                   <CartesianGrid
                     strokeDasharray="3 3"
                     horizontal={false}
-                    stroke="#f1f0ff"
+                    stroke={gridStroke}
                   />
                   <XAxis
                     type="number"
                     allowDecimals={false}
-                    tick={{ fontSize: 11, fill: "#94a3b8" }}
+                    tick={{ fontSize: 11, fill: axisTickColor }}
                     axisLine={false}
                     tickLine={false}
                   />
-                  {/* YAxis width shrinks on small screens via the chart container */}
                   <YAxis
                     type="category"
                     dataKey="name"
                     width={75}
-                    tick={{ fontSize: 11, fill: "#64748b" }}
+                    tick={{ fontSize: 11, fill: axisTickColor }}
                     axisLine={false}
                     tickLine={false}
                     tickFormatter={(v: string) =>
                       v.length > 10 ? v.slice(0, 10) + "…" : v
                     }
                   />
-                  <Tooltip
-                    contentStyle={{
-                      borderRadius: "0.75rem",
-                      border: "1px solid #ede9fe",
-                      fontSize: "13px",
-                    }}
-                  />
+                  <Tooltip contentStyle={tooltipStyle} />
                   <Bar
                     dataKey="count"
                     fill="#8b5cf6"

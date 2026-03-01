@@ -94,7 +94,7 @@ function EditableTitleCell({
 
   return (
     <span
-      className="cursor-pointer hover:text-violet-600 font-medium text-slate-900 min-w-[150px] block"
+      className="cursor-pointer hover:text-primary font-medium text-foreground min-w-[150px] block"
       onClick={() => setEditing(true)}
       title="לחץ לעריכה"
     >
@@ -133,12 +133,11 @@ function ProjectSelectCell({
       >
         <SelectTrigger
           className={cn(
-            "relative h-9 w-[150px] rounded-full border border-violet-200 bg-violet-50",
-            "text-xs text-violet-700 font-medium shadow-none justify-center",
-            "hover:bg-violet-100 hover:border-violet-300",
-            "focus:ring-2 focus:ring-violet-300 focus:ring-offset-0",
-            "[&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2",
-            "px-6"
+            "relative h-9 w-[150px] rounded-full border border-border bg-accent",
+            "text-xs text-accent-foreground font-medium shadow-none justify-center",
+            "hover:bg-accent/70",
+            "focus:ring-2 focus:ring-ring focus:ring-offset-0",
+            "[&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
           )}
         >
           <SelectValue placeholder="ללא פרויקט" />
@@ -146,7 +145,7 @@ function ProjectSelectCell({
         <SelectContent align="center">
           <SelectItem
             value="none"
-            className="justify-center text-center px-3 data-[state=checked]:bg-violet-100 data-[state=checked]:text-violet-700"
+            className="justify-center text-center px-3 data-[state=checked]:bg-accent"
           >
             ללא פרויקט
           </SelectItem>
@@ -154,14 +153,14 @@ function ProjectSelectCell({
             <SelectItem
               key={p.id}
               value={p.id}
-              className="justify-center text-center px-3 data-[state=checked]:bg-violet-100 data-[state=checked]:text-violet-700"
+              className="justify-center text-center px-3 data-[state=checked]:bg-accent"
             >
               {p.name}
             </SelectItem>
           ))}
           <SelectItem
             value="new_project"
-            className="justify-center text-center px-3 text-violet-600 font-medium border-t mt-1 pt-2"
+            className="justify-center text-center px-3 text-primary font-medium border-t mt-1 pt-2"
           >
             + צור פרויקט חדש
           </SelectItem>
@@ -247,7 +246,7 @@ export function createTaskColumns({
           <SelectTrigger
             className={cn(
               "relative h-8 w-[120px] text-xs border-0 bg-transparent shadow-none",
-              "justify-center hover:bg-violet-50",
+              "justify-center hover:bg-accent",
               "[&>svg]:absolute [&>svg]:left-1.5 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
             )}
           >
@@ -262,18 +261,18 @@ export function createTaskColumns({
           </SelectTrigger>
           <SelectContent align="center">
             <SelectItem value="backlog" className="justify-center text-center px-3">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-700">
-                רשימת המתנה
+              <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.backlog)}>
+                {STATUS_LABELS.backlog}
               </span>
             </SelectItem>
             <SelectItem value="in_progress" className="justify-center text-center px-3">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">
-                בביצוע
+              <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.in_progress)}>
+                {STATUS_LABELS.in_progress}
               </span>
             </SelectItem>
             <SelectItem value="done" className="justify-center text-center px-3">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">
-                הושלם
+              <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.done)}>
+                {STATUS_LABELS.done}
               </span>
             </SelectItem>
           </SelectContent>
@@ -308,7 +307,7 @@ export function createTaskColumns({
           <SelectTrigger
             className={cn(
               "relative h-8 w-[100px] text-xs border-0 bg-transparent shadow-none",
-              "justify-center hover:bg-violet-50",
+              "justify-center hover:bg-accent",
               "[&>svg]:absolute [&>svg]:left-1.5 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
             )}
           >
@@ -323,18 +322,18 @@ export function createTaskColumns({
           </SelectTrigger>
           <SelectContent align="center">
             <SelectItem value="low" className="justify-center text-center px-3">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">
-                נמוכה
+              <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS.low)}>
+                {PRIORITY_LABELS.low}
               </span>
             </SelectItem>
             <SelectItem value="medium" className="justify-center text-center px-3">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">
-                בינונית
+              <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS.medium)}>
+                {PRIORITY_LABELS.medium}
               </span>
             </SelectItem>
             <SelectItem value="high" className="justify-center text-center px-3">
-              <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">
-                גבוהה
+              <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS.high)}>
+                {PRIORITY_LABELS.high}
               </span>
             </SelectItem>
           </SelectContent>
@@ -377,8 +376,8 @@ export function createTaskColumns({
               });
             }}
             className={cn(
-              "text-xs border rounded-lg px-2 py-1 bg-transparent focus:outline-none focus:ring-1 focus:ring-violet-400 w-[130px]",
-              isOverdue ? "text-red-600 border-red-300" : "text-slate-600"
+              "text-xs border rounded-lg px-2 py-1 bg-transparent focus:outline-none focus:ring-1 focus:ring-ring w-[130px]",
+              isOverdue ? "text-red-600 border-red-300" : "text-muted-foreground border-border"
             )}
           />
         );
@@ -403,7 +402,7 @@ export function createTaskColumns({
       cell: (info) => {
         const date = info.row.original.created_at;
         return (
-          <span className="text-xs text-slate-500 whitespace-nowrap">
+          <span className="text-xs text-muted-foreground whitespace-nowrap">
             {date
               ? format(new Date(date), "dd/MM/yyyy", { locale: he })
               : "—"}
@@ -422,7 +421,7 @@ export function createTaskColumns({
               variant="ghost"
               size="icon"
               aria-label="מחק משימה"
-              className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50"
+              className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-50"
             >
               <Trash2 className="h-4 w-4" />
             </Button>

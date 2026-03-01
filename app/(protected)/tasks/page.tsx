@@ -25,8 +25,14 @@ export default async function TasksPage() {
       .order("name", { ascending: true }),
   ]);
 
-  if (tasksResult.error) throw tasksResult.error;
-  if (projectsResult.error) throw projectsResult.error;
+  if (tasksResult.error) {
+    console.error("[Tasks] Supabase error:", tasksResult.error);
+    throw new Error("Could not load tasks. Please try again.");
+  }
+  if (projectsResult.error) {
+    console.error("[Tasks] Projects Supabase error:", projectsResult.error);
+    throw new Error("Could not load projects. Please try again.");
+  }
 
   const rawTasks = tasksResult.data || [];
   const projects = projectsResult.data || [];

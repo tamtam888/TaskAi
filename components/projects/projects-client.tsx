@@ -42,14 +42,14 @@ interface ProjectsClientProps {
 function EmptyState({ onCreateClick }: { onCreateClick: () => void }) {
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="h-16 w-16 rounded-2xl bg-violet-50 flex items-center justify-center mb-4">
-        <FolderOpen className="h-8 w-8 text-violet-400" />
+      <div className="h-16 w-16 rounded-2xl bg-primary/10 flex items-center justify-center mb-4">
+        <FolderOpen className="h-8 w-8 text-primary" />
       </div>
-      <h2 className="text-lg font-semibold text-slate-800 mb-1">אין פרויקטים עדיין</h2>
-      <p className="text-sm text-slate-400 mb-6">צור פרויקט ראשון כדי לארגן את המשימות שלך</p>
+      <h2 className="text-lg font-semibold text-foreground mb-1">אין פרויקטים עדיין</h2>
+      <p className="text-sm text-muted-foreground mb-6">צור פרויקט ראשון כדי לארגן את המשימות שלך</p>
       <Button
         onClick={onCreateClick}
-        className="gap-2 rounded-2xl px-6 bg-violet-600 hover:bg-violet-700 shadow-sm shadow-violet-200 font-semibold"
+        className="gap-2 rounded-2xl px-6 bg-primary hover:bg-primary/90 shadow-sm shadow-primary/20 font-semibold"
       >
         <Plus className="h-4 w-4" />
         פרויקט חדש
@@ -115,10 +115,10 @@ function ProjectRow({
   };
 
   return (
-    <Card className="group flex items-center gap-4 px-5 py-4 border border-violet-100 shadow-sm bg-white hover:border-violet-200 hover:shadow-md transition-all">
+    <Card className="group flex items-center gap-4 px-5 py-4 border border-border shadow-sm bg-card hover:border-border/80 hover:shadow-md transition-all">
       {/* Icon */}
-      <div className="h-10 w-10 rounded-xl bg-violet-50 flex items-center justify-center flex-shrink-0">
-        <Folder className="h-5 w-5 text-violet-500" />
+      <div className="h-10 w-10 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
+        <Folder className="h-5 w-5 text-primary" />
       </div>
 
       {/* Name / Edit input */}
@@ -152,7 +152,7 @@ function ProjectRow({
             <Button
               size="icon"
               variant="ghost"
-              className="h-7 w-7 text-slate-400 hover:bg-slate-100"
+              className="h-7 w-7 text-muted-foreground hover:bg-muted"
               onClick={() => {
                 setNameValue(project.name);
                 setEditing(false);
@@ -162,7 +162,7 @@ function ProjectRow({
             </Button>
           </div>
         ) : (
-          <span className="text-sm font-semibold text-slate-800 truncate block">
+          <span className="text-sm font-semibold text-foreground truncate block">
             {project.name}
           </span>
         )}
@@ -173,8 +173,8 @@ function ProjectRow({
         className={cn(
           "text-xs font-medium px-2.5 py-1 rounded-full flex-shrink-0",
           project.task_count > 0
-            ? "bg-violet-100 text-violet-700"
-            : "bg-slate-100 text-slate-500"
+            ? "bg-primary/10 text-primary"
+            : "bg-muted text-muted-foreground"
         )}
       >
         {project.task_count} משימות
@@ -186,7 +186,7 @@ function ProjectRow({
           <Button
             size="icon"
             variant="ghost"
-            className="h-8 w-8 text-slate-400 hover:text-violet-600 hover:bg-violet-50"
+            className="h-8 w-8 text-muted-foreground hover:text-primary hover:bg-primary/10"
             onClick={() => setEditing(true)}
             aria-label="שנה שם פרויקט"
           >
@@ -198,7 +198,7 @@ function ProjectRow({
               <Button
                 size="icon"
                 variant="ghost"
-                className="h-8 w-8 text-slate-400 hover:text-red-500 hover:bg-red-50"
+                className="h-8 w-8 text-muted-foreground hover:text-red-500 hover:bg-red-50"
                 aria-label="מחק פרויקט"
               >
                 <Trash2 className="h-4 w-4" />
@@ -257,17 +257,17 @@ export function ProjectsClient({ initialProjects }: ProjectsClientProps) {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
             פרויקטים
           </h1>
-          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
+          <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
             נהל את הפרויקטים שלך
           </p>
         </div>
         {projects.length > 0 && (
           <Button
             onClick={() => setCreateOpen(true)}
-            className="gap-2 rounded-2xl px-5 bg-violet-600 hover:bg-violet-700 shadow-sm shadow-violet-200 font-semibold"
+            className="gap-2 rounded-2xl px-5 bg-primary hover:bg-primary/90 shadow-sm shadow-primary/20 font-semibold"
           >
             <Plus className="h-4 w-4" />
             פרויקט חדש

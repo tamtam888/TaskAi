@@ -14,7 +14,10 @@ export default async function ProjectsPage() {
       .not("project_id", "is", null),
   ]);
 
-  if (projectsResult.error) throw projectsResult.error;
+  if (projectsResult.error) {
+    console.error("[Projects] Supabase error:", projectsResult.error);
+    throw new Error("Could not load projects. Please try again.");
+  }
 
   const projects = projectsResult.data || [];
   const taskRows = tasksResult.data || [];

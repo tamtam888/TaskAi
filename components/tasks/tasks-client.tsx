@@ -106,19 +106,19 @@ function FocusTaskCard({
       className={cn(
         "relative rounded-2xl border p-4 space-y-3 transition-all",
         isDone
-          ? "bg-green-50 border-green-200 opacity-70"
-          : "bg-white border-violet-200 shadow-sm"
+          ? "bg-accent/30 border-border opacity-70"
+          : "bg-card border-border shadow-sm"
       )}
     >
       {/* Rank badge */}
-      <span className="absolute top-3 left-3 h-5 w-5 rounded-full bg-violet-100 text-violet-600 text-[10px] font-bold flex items-center justify-center">
+      <span className="absolute top-3 left-3 h-5 w-5 rounded-full bg-primary/10 text-primary text-[10px] font-bold flex items-center justify-center">
         {rank}
       </span>
 
       {/* Title */}
       <p className={cn(
         "text-sm font-semibold pr-1 pl-7 leading-snug line-clamp-2",
-        isDone ? "line-through text-slate-400" : "text-slate-800"
+        isDone ? "line-through text-muted-foreground" : "text-foreground"
       )}>
         {task.title}
       </p>
@@ -135,10 +135,10 @@ function FocusTaskCard({
           <span className={cn(
             "text-xs px-2 py-0.5 rounded-full font-medium",
             isOverdue
-              ? "bg-red-100 text-red-700"
+              ? "bg-destructive/15 text-destructive"
               : isDueToday
               ? "bg-amber-100 text-amber-700"
-              : "bg-slate-100 text-slate-600"
+              : "bg-muted text-muted-foreground"
           )}>
             {isOverdue ? "באיחור · " : isDueToday ? "היום · " : ""}
             {format(new Date(task.due_date + "T00:00:00"), "d MMM", { locale: he })}
@@ -153,20 +153,20 @@ function FocusTaskCard({
           onUpdate(task.id, { status: v as TaskWithDetails["status"] })
         }
       >
-        <SelectTrigger className="h-7 text-xs border-0 bg-slate-50 hover:bg-violet-50 rounded-full px-3 shadow-none w-full">
+        <SelectTrigger className="h-7 text-xs border-0 bg-muted hover:bg-accent rounded-full px-3 shadow-none w-full">
           <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS[task.status])}>
             {STATUS_LABELS[task.status]}
           </span>
         </SelectTrigger>
         <SelectContent>
           <SelectItem value="backlog">
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">רשימת המתנה</span>
+            <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.backlog)}>{STATUS_LABELS.backlog}</span>
           </SelectItem>
           <SelectItem value="in_progress">
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">בביצוע</span>
+            <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.in_progress)}>{STATUS_LABELS.in_progress}</span>
           </SelectItem>
           <SelectItem value="done">
-            <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">הושלם</span>
+            <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.done)}>{STATUS_LABELS.done}</span>
           </SelectItem>
         </SelectContent>
       </Select>
@@ -212,7 +212,7 @@ function TaskMobileCard({
 
   return (
     <>
-      <div className="bg-white rounded-2xl border border-violet-100 shadow-sm p-4 space-y-3">
+      <div className="bg-card rounded-2xl border border-border shadow-sm p-4 space-y-3">
 
         {/* ── Title row ── */}
         <div className="flex items-start gap-2 min-h-[28px]">
@@ -230,7 +230,7 @@ function TaskMobileCard({
                   }
                 }}
                 autoFocus
-                className="h-8 text-sm flex-1 rounded-xl border-violet-200 focus-visible:ring-violet-400"
+                className="h-8 text-sm flex-1 rounded-xl border-border focus-visible:ring-ring"
               />
               <Button
                 variant="ghost"
@@ -244,7 +244,7 @@ function TaskMobileCard({
                 variant="ghost"
                 size="icon"
                 onClick={() => { setTitleValue(task.title); setEditingTitle(false); }}
-                className="h-7 w-7 flex-shrink-0 text-slate-400 hover:bg-slate-50 rounded-lg"
+                className="h-7 w-7 flex-shrink-0 text-muted-foreground hover:bg-muted rounded-lg"
               >
                 <X className="h-3.5 w-3.5" />
               </Button>
@@ -252,7 +252,7 @@ function TaskMobileCard({
           ) : (
             <>
               <p
-                className="font-semibold text-slate-900 text-sm leading-snug flex-1 cursor-pointer hover:text-violet-700 transition-colors"
+                className="font-semibold text-foreground text-sm leading-snug flex-1 cursor-pointer hover:text-primary transition-colors"
                 onClick={() => setEditingTitle(true)}
                 title="לחץ לעריכה"
               >
@@ -263,7 +263,7 @@ function TaskMobileCard({
                 size="icon"
                 onClick={() => setEditingTitle(true)}
                 aria-label="ערוך כותרת"
-                className="h-7 w-7 flex-shrink-0 text-slate-300 hover:text-violet-500 hover:bg-violet-50 rounded-lg"
+                className="h-7 w-7 flex-shrink-0 text-muted-foreground/50 hover:text-primary hover:bg-primary/10 rounded-lg"
               >
                 <Pencil className="h-3.5 w-3.5" />
               </Button>
@@ -273,7 +273,7 @@ function TaskMobileCard({
                     variant="ghost"
                     size="icon"
                     aria-label="מחק משימה"
-                    className="h-7 w-7 flex-shrink-0 text-slate-400 hover:text-red-500 hover:bg-red-50 rounded-lg"
+                    className="h-7 w-7 flex-shrink-0 text-muted-foreground hover:text-red-500 hover:bg-red-50 rounded-lg"
                   >
                     <Trash2 className="h-3.5 w-3.5" />
                   </Button>
@@ -309,20 +309,20 @@ function TaskMobileCard({
               onUpdate(task.id, { status: v as TaskWithDetails["status"] })
             }
           >
-            <SelectTrigger className="h-7 text-xs w-auto min-w-[110px] border-0 bg-slate-50 hover:bg-violet-50 rounded-full px-2 shadow-none">
+            <SelectTrigger className="h-7 text-xs w-auto min-w-[110px] border-0 bg-muted hover:bg-accent rounded-full px-2 shadow-none">
               <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS[task.status])}>
                 {STATUS_LABELS[task.status]}
               </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="backlog">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-slate-100 text-slate-600">רשימת המתנה</span>
+                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.backlog)}>{STATUS_LABELS.backlog}</span>
               </SelectItem>
               <SelectItem value="in_progress">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-violet-100 text-violet-700">בביצוע</span>
+                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.in_progress)}>{STATUS_LABELS.in_progress}</span>
               </SelectItem>
               <SelectItem value="done">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-green-100 text-green-700">הושלם</span>
+                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", STATUS_COLORS.done)}>{STATUS_LABELS.done}</span>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -333,20 +333,20 @@ function TaskMobileCard({
               onUpdate(task.id, { priority: v as TaskWithDetails["priority"] })
             }
           >
-            <SelectTrigger className="h-7 text-xs w-auto min-w-[90px] border-0 bg-slate-50 hover:bg-violet-50 rounded-full px-2 shadow-none">
+            <SelectTrigger className="h-7 text-xs w-auto min-w-[90px] border-0 bg-muted hover:bg-accent rounded-full px-2 shadow-none">
               <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS[task.priority])}>
                 {PRIORITY_LABELS[task.priority]}
               </span>
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="low">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-gray-100 text-gray-700">נמוכה</span>
+                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS.low)}>{PRIORITY_LABELS.low}</span>
               </SelectItem>
               <SelectItem value="medium">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-yellow-100 text-yellow-700">בינונית</span>
+                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS.medium)}>{PRIORITY_LABELS.medium}</span>
               </SelectItem>
               <SelectItem value="high">
-                <span className="px-2 py-0.5 rounded-full text-xs font-medium bg-red-100 text-red-700">גבוהה</span>
+                <span className={cn("px-2 py-0.5 rounded-full text-xs font-medium", PRIORITY_COLORS.high)}>{PRIORITY_LABELS.high}</span>
               </SelectItem>
             </SelectContent>
           </Select>
@@ -366,25 +366,24 @@ function TaskMobileCard({
           >
             <SelectTrigger
               className={cn(
-                "relative h-7 min-w-[110px] max-w-[170px] rounded-full border border-violet-200 bg-violet-50",
-                "text-xs text-violet-700 font-medium shadow-none justify-center",
-                "hover:bg-violet-100",
-                "[&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2",
-                "px-6"
+                "relative h-7 min-w-[110px] max-w-[170px] rounded-full border border-border bg-accent",
+                "text-xs text-accent-foreground font-medium shadow-none justify-center",
+                "hover:bg-accent/70",
+                "[&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
               )}
             >
               <SelectValue placeholder="ללא פרויקט" />
             </SelectTrigger>
             <SelectContent align="center">
-              <SelectItem value="none" className="justify-center text-center px-3 data-[state=checked]:bg-violet-100">
+              <SelectItem value="none" className="justify-center text-center px-3 data-[state=checked]:bg-accent">
                 ללא פרויקט
               </SelectItem>
               {projects.map((p) => (
-                <SelectItem key={p.id} value={p.id} className="justify-center text-center px-3 data-[state=checked]:bg-violet-100">
+                <SelectItem key={p.id} value={p.id} className="justify-center text-center px-3 data-[state=checked]:bg-accent">
                   {p.name}
                 </SelectItem>
               ))}
-              <SelectItem value="new_project" className="justify-center text-center px-3 text-violet-600 font-medium border-t mt-1 pt-2">
+              <SelectItem value="new_project" className="justify-center text-center px-3 text-primary font-medium border-t mt-1 pt-2">
                 + צור פרויקט חדש
               </SelectItem>
             </SelectContent>
@@ -402,10 +401,10 @@ function TaskMobileCard({
             }}
             className={cn(
               "h-7 text-xs border rounded-full px-3 bg-transparent",
-              "focus:outline-none focus:ring-1 focus:ring-violet-400",
+              "focus:outline-none focus:ring-1 focus:ring-ring",
               isOverdue
                 ? "text-red-600 border-red-300"
-                : "text-slate-500 border-violet-200"
+                : "text-muted-foreground border-border"
             )}
           />
         </div>
@@ -440,8 +439,8 @@ function PaginationBar({
   onNext: () => void;
 }) {
   return (
-    <div className="flex items-center justify-between px-4 py-3 border-t border-violet-50 bg-violet-50/30">
-      <p className="text-sm text-slate-500">
+    <div className="flex items-center justify-between px-4 py-3 border-t border-border bg-muted/30">
+      <p className="text-sm text-muted-foreground">
         עמוד {pageIndex + 1} מתוך {pageCount}
       </p>
       <div className="flex items-center gap-2">
@@ -450,7 +449,7 @@ function PaginationBar({
           size="sm"
           onClick={onPrev}
           disabled={!canPrev}
-          className="rounded-xl border-violet-200 hover:bg-violet-50"
+          className="rounded-xl border-border hover:bg-accent"
         >
           <ChevronRight className="h-4 w-4" />
         </Button>
@@ -459,7 +458,7 @@ function PaginationBar({
           size="sm"
           onClick={onNext}
           disabled={!canNext}
-          className="rounded-xl border-violet-200 hover:bg-violet-50"
+          className="rounded-xl border-border hover:bg-accent"
         >
           <ChevronLeft className="h-4 w-4" />
         </Button>
@@ -603,6 +602,8 @@ export function TasksClient({
     return tasks.filter((t) => t.due_date === today && t.status !== "done").length;
   }, [tasks]);
 
+  const openTaskCount = useMemo(() => tasks.filter((t) => t.status !== "done").length, [tasks]);
+
   const columns = useMemo(
     () =>
       createTaskColumns({
@@ -660,11 +661,11 @@ export function TasksClient({
       {/* ── Header ── */}
       <div className="flex items-center justify-between gap-3">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">
+          <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">
             המשימות שלי
           </h1>
-          <p className="text-slate-500 text-xs sm:text-sm mt-0.5">
-            {tasks.length} משימות סה&quot;כ
+          <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">
+            {openTaskCount} משימות פתוחות · {tasks.length} סה&quot;כ
           </p>
         </div>
         <AddTaskModal
@@ -676,17 +677,17 @@ export function TasksClient({
 
       {/* ── Overload hint ── */}
       {todayTaskCount > OVERLOAD_THRESHOLD && !focusMode && (
-        <div className="flex items-center justify-between gap-3 bg-violet-50 border border-violet-200 rounded-2xl px-4 py-3 flex-wrap">
+        <div className="flex items-center justify-between gap-3 bg-accent/20 border border-border rounded-2xl px-4 py-3 flex-wrap">
           <div className="flex items-center gap-3">
-            <Zap className="h-4 w-4 text-violet-500 flex-shrink-0" />
-            <p className="text-sm text-violet-800">
+            <Zap className="h-4 w-4 text-primary flex-shrink-0" />
+            <p className="text-sm text-accent-foreground">
               נראה שיש הרבה משימות להיום. אולי כדאי לבחור 3 למשימות מרכזיות?
             </p>
           </div>
           <Button
             size="sm"
             onClick={() => setFocusMode(true)}
-            className="rounded-xl bg-violet-600 hover:bg-violet-700 text-white text-xs flex-shrink-0"
+            className="rounded-xl bg-primary hover:bg-primary/90 text-primary-foreground text-xs flex-shrink-0"
           >
             <Sparkles className="h-3.5 w-3.5 ml-1" />
             הפעל מצב פוקוס
@@ -695,14 +696,14 @@ export function TasksClient({
       )}
 
       {/* ── Search bar ── */}
-      <div className="bg-white rounded-2xl border border-violet-100 shadow-sm p-3">
+      <div className="bg-card rounded-2xl border border-border shadow-sm p-3">
         <div className="relative w-full sm:max-w-sm">
-          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-violet-400" />
+          <Search className="absolute right-3 top-1/2 -translate-y-1/2 h-4 w-4 text-muted-foreground" />
           <Input
             placeholder="חיפוש משימות..."
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            className="pr-9 rounded-xl border-violet-100 focus-visible:ring-violet-400 bg-violet-50/40 placeholder:text-slate-400"
+            className="pr-9 rounded-xl border-0 bg-transparent focus-visible:ring-0 placeholder:text-muted-foreground"
           />
         </div>
       </div>
@@ -717,10 +718,10 @@ export function TasksClient({
               onClick={() => handleQuickFilter(f)}
               className={cn(
                 "px-3 py-1.5 rounded-full text-xs font-medium transition-all border",
-                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-1",
+                "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
                 quickFilter === f
-                  ? "bg-violet-600 text-white border-violet-600 shadow-sm"
-                  : "bg-white text-slate-600 border-violet-100 hover:border-violet-300 hover:bg-violet-50"
+                  ? "bg-primary text-primary-foreground border-primary shadow-sm"
+                  : "bg-card text-muted-foreground border-border hover:bg-accent hover:text-foreground"
               )}
             >
               {QUICK_FILTER_LABELS[f]}
@@ -736,8 +737,8 @@ export function TasksClient({
           className={cn(
             "gap-1.5 rounded-full text-xs font-medium border transition-all",
             focusMode
-              ? "bg-violet-600 text-white border-violet-600 hover:bg-violet-700 hover:text-white"
-              : "border-violet-200 text-violet-700 hover:bg-violet-50"
+              ? "bg-primary text-primary-foreground border-primary hover:bg-primary/90 hover:text-primary-foreground"
+              : "border-border text-muted-foreground hover:bg-accent hover:text-foreground"
           )}
         >
           <Sparkles className="h-3.5 w-3.5" />
@@ -747,18 +748,18 @@ export function TasksClient({
 
       {/* ── Focus mode panel ── */}
       {focusMode && (
-        <div className="bg-gradient-to-br from-violet-50 to-white rounded-2xl border border-violet-200 shadow-sm p-5 space-y-4">
+        <div className="bg-accent/20 rounded-2xl border border-border shadow-sm p-5 space-y-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center gap-2">
-              <Sparkles className="h-4 w-4 text-violet-500" />
-              <h2 className="text-sm font-semibold text-slate-800">
+              <Sparkles className="h-4 w-4 text-primary" />
+              <h2 className="text-sm font-semibold text-foreground">
                 3 המשימות הדחופות ביותר
               </h2>
             </div>
             <button
               onClick={() => setFocusMode(false)}
               aria-label="צא ממצב פוקוס"
-              className="text-xs text-slate-400 hover:text-slate-600 flex items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 rounded"
+              className="text-xs text-muted-foreground hover:text-foreground flex items-center gap-1 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring rounded"
             >
               <X className="h-3.5 w-3.5" />
               צא ממצב פוקוס
@@ -768,8 +769,8 @@ export function TasksClient({
           {focusTasks.length === 0 ? (
             <div className="py-6 text-center">
               <p className="text-2xl mb-2">🎉</p>
-              <p className="text-sm font-medium text-slate-700">כל המשימות הושלמו!</p>
-              <p className="text-xs text-slate-400 mt-0.5">אין משימות פתוחות כרגע</p>
+              <p className="text-sm font-medium text-foreground">כל המשימות הושלמו!</p>
+              <p className="text-xs text-muted-foreground mt-0.5">אין משימות פתוחות כרגע</p>
             </div>
           ) : (
             <div className="grid gap-3 sm:grid-cols-3">
@@ -789,8 +790,8 @@ export function TasksClient({
       {/* ── Mobile cards (< sm = 640 px) ── */}
       <div className="sm:hidden space-y-3">
         {visibleRows.length === 0 ? (
-          <div className="bg-white rounded-2xl border border-violet-100 p-10 text-center text-slate-400 shadow-sm">
-            <Plus className="h-8 w-8 text-violet-200 mx-auto mb-2" />
+          <div className="bg-card rounded-2xl border border-border p-10 text-center text-muted-foreground shadow-sm">
+            <Plus className="h-8 w-8 text-primary/20 mx-auto mb-2" />
             <p className="font-medium">אין משימות להצגה</p>
             <p className="text-xs mt-1">
               {quickFilter !== "all"
@@ -810,27 +811,27 @@ export function TasksClient({
             />
           ))
         )}
-        <div className="bg-white rounded-2xl border border-violet-100 shadow-sm overflow-hidden">
+        <div className="bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
           <PaginationBar {...paginationProps} />
         </div>
       </div>
 
       {/* ── Table (≥ sm = 640 px) ── */}
-      <div className="hidden sm:block bg-white rounded-2xl border border-violet-100 shadow-sm overflow-hidden">
+      <div className="hidden sm:block bg-card rounded-2xl border border-border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
           <Table>
             <TableHeader>
               {table.getHeaderGroups().map((headerGroup) => (
                 <TableRow
                   key={headerGroup.id}
-                  className="bg-violet-50/60 border-b border-violet-100"
+                  className="bg-muted/40 border-b border-border"
                 >
                   {headerGroup.headers.map((header) => (
                     <TableHead
                       key={header.id}
                       style={{ width: header.getSize() }}
                       className={cn(
-                        "font-semibold text-slate-600 whitespace-nowrap",
+                        "font-semibold text-muted-foreground uppercase tracking-wider whitespace-nowrap text-xs",
                         TABLET_HIDDEN_COLS.has(header.column.id) && "hidden lg:table-cell"
                       )}
                     >
@@ -850,7 +851,7 @@ export function TasksClient({
                 visibleRows.map((row) => (
                   <TableRow
                     key={row.id}
-                    className="hover:bg-violet-50/40 transition-colors border-b border-slate-50 last:border-0"
+                    className="hover:bg-accent/40 transition-colors border-b border-border/50 last:border-0"
                   >
                     {row.getVisibleCells().map((cell) => (
                       <TableCell
@@ -871,10 +872,10 @@ export function TasksClient({
                 <TableRow>
                   <TableCell
                     colSpan={columns.length}
-                    className="h-36 text-center text-slate-400"
+                    className="h-36 text-center text-muted-foreground"
                   >
                     <div className="flex flex-col items-center gap-2">
-                      <Plus className="h-8 w-8 text-violet-200" />
+                      <Plus className="h-8 w-8 text-primary/20" />
                       <p className="font-medium">אין משימות להצגה</p>
                       <p className="text-xs">
                         {quickFilter !== "all"

@@ -8,7 +8,10 @@ export default async function DashboardPage() {
     .from("tasks")
     .select("*, project:projects(id, name)");
 
-  if (error) throw error;
+  if (error) {
+    console.error("[Dashboard] Supabase error:", error);
+    throw new Error("Could not load dashboard data. Please try again.");
+  }
 
   return <DashboardClient tasks={tasks || []} />;
 }

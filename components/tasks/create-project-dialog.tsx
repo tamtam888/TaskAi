@@ -99,7 +99,7 @@ export function CreateProjectDialog({
             )}
           </div>
           <div className="flex justify-start gap-3 pt-1">
-            <Button type="submit" disabled={isLoading} className="bg-violet-600 hover:bg-violet-700 rounded-xl">
+            <Button type="submit" disabled={isLoading} className="bg-primary hover:bg-primary/90 rounded-xl">
               {isLoading ? (
                 <>
                   <Loader2 className="ml-2 h-4 w-4 animate-spin" />
@@ -113,7 +113,7 @@ export function CreateProjectDialog({
               type="button"
               variant="outline"
               onClick={() => { reset(); onOpenChange(false); }}
-              className="rounded-xl border-violet-200 hover:bg-violet-50"
+              className="rounded-xl border-border hover:bg-accent"
             >
               ביטול
             </Button>

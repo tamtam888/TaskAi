@@ -55,13 +55,13 @@ export const PRIORITY_LABELS: Record<TaskPriority, string> = {
 };
 
 export const STATUS_COLORS: Record<TaskStatus, string> = {
-  backlog: "bg-slate-100 text-slate-600",
-  in_progress: "bg-violet-100 text-violet-700",
-  done: "bg-green-100 text-green-700",
+  backlog:     "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200",
+  in_progress: "bg-blue-100 text-blue-700 dark:bg-blue-900/40 dark:text-blue-300",
+  done:        "bg-green-100 text-green-700 dark:bg-green-900/40 dark:text-green-300",
 };
 
 export const PRIORITY_COLORS: Record<TaskPriority, string> = {
-  low: "bg-gray-100 text-gray-700",
-  medium: "bg-yellow-100 text-yellow-700",
-  high: "bg-red-100 text-red-700",
+  low:    "bg-slate-100 text-slate-600 dark:bg-slate-700 dark:text-slate-200",
+  medium: "bg-orange-100 text-orange-700 dark:bg-orange-900/40 dark:text-orange-300",
+  high:   "bg-red-100 text-red-700 dark:bg-red-900/40 dark:text-red-300",
 };

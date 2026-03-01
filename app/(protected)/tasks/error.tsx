@@ -17,16 +17,16 @@ export default function TasksError({
 
   return (
     <div className="flex flex-col items-center justify-center py-24 text-center">
-      <div className="h-14 w-14 rounded-2xl bg-red-50 flex items-center justify-center mb-4">
-        <AlertTriangle className="h-7 w-7 text-red-400" />
+      <div className="h-14 w-14 rounded-2xl bg-destructive/10 flex items-center justify-center mb-4">
+        <AlertTriangle className="h-7 w-7 text-destructive" />
       </div>
-      <h2 className="text-lg font-semibold text-slate-800 mb-1">שגיאה בטעינת המשימות</h2>
-      <p className="text-sm text-slate-400 mb-6 max-w-xs">
+      <h2 className="text-lg font-semibold text-foreground mb-1">שגיאה בטעינת המשימות</h2>
+      <p className="text-sm text-muted-foreground mb-6 max-w-xs">
         לא הצלחנו לטעון את המשימות. בדוק את החיבור לאינטרנט ונסה שוב.
       </p>
       <Button
         onClick={reset}
-        className="rounded-xl bg-violet-600 hover:bg-violet-700"
+        className="rounded-xl bg-primary hover:bg-primary/90"
       >
         נסה שוב
       </Button>

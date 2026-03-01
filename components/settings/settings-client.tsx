@@ -48,28 +48,28 @@ function OptionCard({
       onClick={onClick}
       className={cn(
         "flex flex-col items-start gap-2 rounded-xl border-2 p-4 text-right w-full transition-all",
-        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-violet-400 focus-visible:ring-offset-1",
+        "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-1",
         active
-          ? "border-violet-500 bg-violet-50 shadow-sm"
-          : "border-slate-100 bg-white hover:border-violet-200 hover:bg-violet-50/30"
+          ? "border-primary bg-primary/10 shadow-sm"
+          : "border-border bg-card hover:border-primary/30 hover:bg-accent/50"
       )}
     >
       <div
         className={cn(
           "h-8 w-8 rounded-lg flex items-center justify-center",
-          active ? "bg-violet-100 text-violet-600" : "bg-slate-100 text-slate-500"
+          active ? "bg-primary/20 text-primary" : "bg-muted text-muted-foreground"
         )}
       >
         {icon}
       </div>
       <div>
-        <p className={cn("text-sm font-semibold", active ? "text-violet-700" : "text-slate-700")}>
+        <p className={cn("text-sm font-semibold", active ? "text-primary" : "text-foreground")}>
           {label}
         </p>
-        <p className="text-xs text-slate-400 mt-0.5">{description}</p>
+        <p className="text-xs text-muted-foreground mt-0.5">{description}</p>
       </div>
       {active && (
-        <span className="self-end mt-auto text-[10px] font-bold text-violet-500 uppercase tracking-wide">
+        <span className="self-end mt-auto text-[10px] font-bold text-primary uppercase tracking-wide">
           פעיל
         </span>
       )}
@@ -114,16 +114,16 @@ export function SettingsClient({ email, createdAt }: SettingsClientProps) {
 
       {/* ── Page header ── */}
       <div>
-        <h1 className="text-xl sm:text-2xl font-bold text-slate-900 tracking-tight">הגדרות</h1>
-        <p className="text-slate-500 text-xs sm:text-sm mt-0.5">נהל את פרטי החשבון וההעדפות שלך</p>
+        <h1 className="text-xl sm:text-2xl font-bold text-foreground tracking-tight">הגדרות</h1>
+        <p className="text-muted-foreground text-xs sm:text-sm mt-0.5">נהל את פרטי החשבון וההעדפות שלך</p>
       </div>
 
       {/* ── Account info card ── */}
-      <Card className="border border-violet-100 shadow-sm bg-white rounded-2xl">
+      <Card className="border border-border shadow-sm bg-card rounded-2xl">
         <CardHeader className="pb-2 pt-5 px-6">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold text-slate-800">
-            <div className="h-7 w-7 rounded-lg bg-violet-50 flex items-center justify-center">
-              <User className="h-4 w-4 text-violet-500" />
+          <CardTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
+            <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+              <User className="h-4 w-4 text-primary" />
             </div>
             פרטי חשבון
           </CardTitle>
@@ -132,22 +132,22 @@ export function SettingsClient({ email, createdAt }: SettingsClientProps) {
 
           {/* Email */}
           <div className="space-y-1.5">
-            <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+            <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
               כתובת אימייל
             </Label>
-            <div className="flex items-center h-10 px-3 rounded-xl border border-violet-100 bg-violet-50/40 text-sm text-slate-700 select-all">
+            <div className="flex items-center h-10 px-3 rounded-xl border border-border bg-muted/40 text-sm text-foreground select-all">
               {email}
             </div>
-            <p className="text-xs text-slate-400">לא ניתן לשנות את כתובת האימייל</p>
+            <p className="text-xs text-muted-foreground">לא ניתן לשנות את כתובת האימייל</p>
           </div>
 
           {/* Created date */}
           {formattedDate && (
             <div className="space-y-1.5">
-              <Label className="text-xs font-semibold text-slate-500 uppercase tracking-wide">
+              <Label className="text-xs font-semibold text-muted-foreground uppercase tracking-wide">
                 חשבון נוצר
               </Label>
-              <p className="text-sm text-slate-700">{formattedDate}</p>
+              <p className="text-sm text-foreground">{formattedDate}</p>
             </div>
           )}
 
@@ -155,11 +155,11 @@ export function SettingsClient({ email, createdAt }: SettingsClientProps) {
       </Card>
 
       {/* ── Preferences card ── */}
-      <Card className="border border-violet-100 shadow-sm bg-white rounded-2xl">
+      <Card className="border border-border shadow-sm bg-card rounded-2xl">
         <CardHeader className="pb-2 pt-5 px-6">
-          <CardTitle className="flex items-center gap-2 text-base font-semibold text-slate-800">
-            <div className="h-7 w-7 rounded-lg bg-violet-50 flex items-center justify-center">
-              <SlidersHorizontal className="h-4 w-4 text-violet-500" />
+          <CardTitle className="flex items-center gap-2 text-base font-semibold text-foreground">
+            <div className="h-7 w-7 rounded-lg bg-primary/10 flex items-center justify-center">
+              <SlidersHorizontal className="h-4 w-4 text-primary" />
             </div>
             העדפות
           </CardTitle>
@@ -168,8 +168,8 @@ export function SettingsClient({ email, createdAt }: SettingsClientProps) {
 
           {/* Default view */}
           <div className="space-y-2">
-            <p className="text-sm font-semibold text-slate-700">תצוגת ברירת מחדל</p>
-            <p className="text-xs text-slate-400">הדף שנפתח אחרי כניסה לאפליקציה</p>
+            <p className="text-sm font-semibold text-foreground">תצוגת ברירת מחדל</p>
+            <p className="text-xs text-muted-foreground">הדף שנפתח אחרי כניסה לאפליקציה</p>
             {/* Suppress hydration mismatch while localStorage loads */}
             <div className={cn("grid grid-cols-2 gap-3", !mounted && "opacity-50 pointer-events-none")}>
               <OptionCard
@@ -191,8 +191,8 @@ export function SettingsClient({ email, createdAt }: SettingsClientProps) {
 
           {/* UI density */}
           <div className="space-y-2">
-            <p className="text-sm font-semibold text-slate-700">צפיפות תצוגה</p>
-            <p className="text-xs text-slate-400">משפיע על גודל ריווח הפריטים בממשק</p>
+            <p className="text-sm font-semibold text-foreground">צפיפות תצוגה</p>
+            <p className="text-xs text-muted-foreground">משפיע על גודל ריווח הפריטים בממשק</p>
             <div className={cn("grid grid-cols-2 gap-3", !mounted && "opacity-50 pointer-events-none")}>
               <OptionCard
                 active={density === "comfortable"}
@@ -211,7 +211,7 @@ export function SettingsClient({ email, createdAt }: SettingsClientProps) {
             </div>
           </div>
 
-          <p className="text-xs text-slate-300">
+          <p className="text-xs text-muted-foreground/60">
             ההעדפות נשמרות במכשיר זה בלבד ואינן מסונכרנות בין מכשירים.
           </p>
 
