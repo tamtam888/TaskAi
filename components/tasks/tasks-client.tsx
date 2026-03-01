@@ -369,7 +369,8 @@ function TaskMobileCard({
                 "relative h-7 min-w-[110px] max-w-[170px] rounded-full border border-violet-200 bg-violet-50",
                 "text-xs text-violet-700 font-medium shadow-none justify-center",
                 "hover:bg-violet-100",
-                "[&>span]:truncate [&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
+                "[&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2",
+                "px-6"
               )}
             >
               <SelectValue placeholder="ללא פרויקט" />

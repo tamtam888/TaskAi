@@ -137,7 +137,8 @@ function ProjectSelectCell({
             "text-xs text-violet-700 font-medium shadow-none justify-center",
             "hover:bg-violet-100 hover:border-violet-300",
             "focus:ring-2 focus:ring-violet-300 focus:ring-offset-0",
-            "[&>span]:truncate [&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2"
+            "[&>svg]:absolute [&>svg]:left-2 [&>svg]:top-1/2 [&>svg]:-translate-y-1/2",
+            "px-6"
           )}
         >
           <SelectValue placeholder="ללא פרויקט" />
