@@ -1,116 +1,97 @@
-# משימות חכמות — Smart Task Manager
+# TaskAi - Smart Task Management SaaS
 
-> A production-quality, Hebrew RTL personal task management SaaS built with Next.js 14, Supabase, and Tailwind CSS.
-> Inspired by Monday.com — without the enterprise complexity.
+**TaskAi** is a Hebrew-first RTL task management SaaS built with Next.js 14, TypeScript, Supabase, Tailwind CSS, and shadcn/ui.
+
+The app is inspired by Monday-style task workflows, but keeps the product focused and lightweight: tasks, projects, dashboard insights, smart filters, focus mode, responsive layouts, protected routes, and Supabase Row Level Security.
+
+This project demonstrates production-style frontend architecture, secure user-scoped data, Hebrew RTL UX, server/client separation in Next.js, and practical SaaS product thinking.
+
+## Links
+
+- Portfolio: https://tamtam888.github.io/MyPortfolio/
+- Repository: https://github.com/tamtam888/TaskAi
+
+Project screenshots and visual context are available in the portfolio.
 
 ---
 
-## Features
+## Core Features
 
 | Area | Details |
 |------|---------|
-| **Auth** | Email/password sign-up & login, session refresh middleware, protected routes |
-| **Tasks** | Monday-style table with inline editing (title, status, priority, due date, project) |
-| **Smart Sorting** | Default order: not-done → nearest due date → done; overridden by manual column sort |
-| **Quick Filters** | הכל · היום · שבוע קרוב · באיחור — compose with search and pagination |
-| **Focus Mode** | Top 3 tasks by priority + due date; live-updates when a task is marked done |
-| **Workload Hint** | Gentle banner when > 7 tasks are due today; one-click into Focus Mode |
-| **Dashboard** | Completion %, overdue count, priority pie chart, tasks-per-project bar chart |
-| **Projects** | Full CRUD — create, inline rename, delete with task-count warning |
-| **Settings** | Default view + UI density preferences stored in `localStorage` |
-| **Responsive** | Mobile cards · tablet condensed table · desktop full table |
-| **Accessibility** | `aria-label` on all icon buttons, visible focus rings, Hebrew dialog descriptions |
-| **Loading/Error UX** | Skeleton screens (no layout shift), typed error boundaries with retry |
-| **RLS** | Every user sees only their own data — enforced at the database level |
+| Auth | Email/password signup and login, session refresh middleware, protected routes |
+| Tasks | Monday-style task table with inline editing for title, status, priority, due date, and project |
+| Smart Sorting | Prioritizes not-done tasks, nearest due dates, and completed tasks |
+| Quick Filters | Hebrew filters for all tasks, today, upcoming week, and overdue tasks |
+| Focus Mode | Highlights the most important tasks by priority and due date |
+| Dashboard | Completion percentage, overdue count, priority chart, and project workload chart |
+| Projects | Create, rename, and delete projects with task-count warning |
+| Settings | UI density and default view preferences saved locally |
+| Responsive UI | Mobile cards, tablet condensed layout, desktop table view |
+| Accessibility | aria-label usage, focus states, and Hebrew dialog descriptions |
+| Data Security | Supabase RLS so each user can access only their own data |
 
 ---
 
-## Screenshots
+## Product Focus
 
-> _Add screenshots here once deployed._
+TaskAi was designed as a practical SaaS-style productivity tool, not only as a UI exercise.
 
-| Page | Preview |
-|------|---------|
-| Tasks (desktop) | `docs/screenshots/tasks-desktop.png` |
-| Tasks (mobile) | `docs/screenshots/tasks-mobile.png` |
-| Focus Mode | `docs/screenshots/focus-mode.png` |
-| Dashboard | `docs/screenshots/dashboard.png` |
-| Projects | `docs/screenshots/projects.png` |
-| Settings | `docs/screenshots/settings.png` |
+Main product decisions:
+
+- Hebrew-first interface with RTL layout support
+- Authenticated user experience from the start
+- Supabase policies for user-level data isolation
+- Dashboard and focus tools that help users act, not only store tasks
+- Responsive behavior that changes the task view based on screen size
+- Clear separation between server data loading and client-side interaction
 
 ---
 
 ## Tech Stack
 
 | Layer | Technology |
-|-------|-----------|
-| Framework | Next.js 14 (App Router, RSC) |
-| Language | TypeScript (strict) |
-| Styling | Tailwind CSS + shadcn/ui (Radix primitives) |
+|-------|------------|
+| Framework | Next.js 14, App Router, React Server Components |
+| Language | TypeScript |
+| Styling | Tailwind CSS, shadcn/ui, Radix primitives |
 | Table | TanStack Table v8 |
+| Forms | React Hook Form, Zod |
 | Charts | Recharts |
-| Forms | React Hook Form + Zod |
-| Backend | Supabase (Postgres + Auth + RLS) |
-| Toasts | Sonner |
-| Deployment | Vercel |
+| Backend | Supabase, PostgreSQL, Auth, RLS |
+| UI Feedback | Sonner toasts, loading skeletons, error boundaries |
+| Deployment | Vercel-ready configuration |
 
 ---
 
-## Project Structure
+## Architecture Overview
 
-```
-├── app/
-│   ├── (auth)/
-│   │   ├── login/page.tsx
-│   │   └── signup/page.tsx
-│   └── (protected)/
-│       ├── layout.tsx              # Auth guard + Navbar
-│       ├── tasks/
-│       │   ├── page.tsx            # Server: fetch tasks + projects
-│       │   ├── loading.tsx         # Skeleton
-│       │   └── error.tsx           # Error boundary
-│       ├── dashboard/
-│       │   ├── page.tsx
-│       │   ├── loading.tsx
-│       │   └── error.tsx
-│       ├── projects/
-│       │   ├── page.tsx
-│       │   ├── loading.tsx
-│       │   └── error.tsx
-│       └── settings/
-│           ├── page.tsx
-│           └── loading.tsx
-├── components/
-│   ├── dashboard/dashboard-client.tsx
-│   ├── layout/navbar.tsx
-│   ├── projects/projects-client.tsx
-│   ├── settings/settings-client.tsx
-│   ├── tasks/
-│   │   ├── tasks-client.tsx        # Main table + mobile cards + smart features
-│   │   ├── columns.tsx             # TanStack column definitions
-│   │   ├── add-task-modal.tsx
-│   │   └── create-project-dialog.tsx
-│   └── ui/                         # shadcn/ui primitives (+ skeleton.tsx)
-├── lib/
-│   ├── supabase/
-│   │   ├── client.ts               # Browser Supabase client
-│   │   ├── server.ts               # Server Supabase client
-│   │   └── middleware.ts           # Session refresh
-│   ├── date-utils.ts               # Timezone-safe date helpers
-│   ├── types.ts                    # Shared TypeScript types
-│   └── utils.ts                    # cn() helper
-├── middleware.ts                    # Route protection
-├── public/favicon.svg
-├── supabase/schema.sql
-├── .env.example
-└── README.md
-```
+The project is organized around route-level pages, reusable UI components, Supabase access helpers, shared types, and database schema files.
+
+| Folder | Purpose |
+|--------|---------|
+| `app/` | Next.js App Router pages, protected routes, loading states, and error boundaries |
+| `components/` | Reusable dashboard, layout, project, settings, task, and UI components |
+| `lib/` | Supabase clients, shared types, date helpers, and utilities |
+| `supabase/` | SQL schema and Row Level Security setup |
+| `middleware.ts` | Session-aware route protection |
+| `.env.example` | Required environment variable template |
+
+---
+
+## Data and Security Model
+
+TaskAi uses Supabase Auth and PostgreSQL with Row Level Security.
+
+Each task and project belongs to the authenticated user. Database policies are designed so users can only read and write their own records. This keeps the data model aligned with the product requirement: a personal task workspace with private user data.
+
+The project includes a `supabase/schema.sql` file so the database schema and policies can be recreated in a new Supabase project.
 
 ---
 
 ## Local Setup
 
-### 1. Clone & install
+### 1. Clone and install
 
 ```bash
 git clone https://github.com/tamtam888/TaskAi.git
@@ -120,11 +101,10 @@ npm install
 
 ### 2. Create a Supabase project
 
-1. Go to [supabase.com](https://supabase.com) → **New project**.
-2. Open **SQL Editor** → paste and run the full contents of `supabase/schema.sql`.
-3. Copy your credentials from **Settings → API**:
-   - **Project URL** (`https://xxxx.supabase.co`)
-   - **Anon / public key**
+1. Create a new Supabase project.
+2. Open the SQL Editor.
+3. Run the SQL from `supabase/schema.sql`.
+4. Copy the Project URL and anon public key from Supabase settings.
 
 ### 3. Configure environment variables
 
@@ -132,7 +112,7 @@ npm install
 cp .env.example .env.local
 ```
 
-Edit `.env.local`:
+Add your values:
 
 ```env
 NEXT_PUBLIC_SUPABASE_URL=https://your-project-id.supabase.co
@@ -140,96 +120,80 @@ NEXT_PUBLIC_SUPABASE_ANON_KEY=your-anon-key-here
 NEXT_PUBLIC_SITE_URL=http://localhost:3000
 ```
 
-### 4. Configure Supabase auth redirect URLs
-
-In Supabase → **Authentication → URL Configuration**:
-
-| Field | Value |
-|-------|-------|
-| Site URL | `http://localhost:3000` |
-| Redirect URLs | `http://localhost:3000/**` |
-
-Add your production URLs here before deploying (see [Deployment](#deployment)).
-
-### 5. Run
+### 4. Run locally
 
 ```bash
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — you will be redirected to the login page.
+Open `http://localhost:3000`.
 
 ---
 
-## Deployment
+## Available Scripts
 
-### Vercel (recommended)
+| Command | Purpose |
+|---------|---------|
+| `npm run dev` | Start the development server |
+| `npm run build` | Create a production build |
+| `npm start` | Run the production build locally after build |
+| `npm run lint` | Run Next.js lint checks |
 
-1. Push to GitHub, then import the repo at [vercel.com](https://vercel.com).
-2. Add the following environment variables in the Vercel dashboard:
+---
 
-   | Variable | Value |
-   |----------|-------|
-   | `NEXT_PUBLIC_SUPABASE_URL` | your Supabase project URL |
-   | `NEXT_PUBLIC_SUPABASE_ANON_KEY` | your Supabase anon key |
-   | `NEXT_PUBLIC_SITE_URL` | `https://your-vercel-domain.vercel.app` |
+## Deployment Notes
 
-3. Deploy.
+TaskAi is built for Vercel deployment.
 
-4. After the first deploy, update Supabase → **Authentication → URL Configuration**:
+Required Vercel environment variables:
 
-   | Field | Value |
-   |-------|-------|
-   | Site URL | `https://your-vercel-domain.vercel.app` |
-   | Redirect URLs | `http://localhost:3000/**` · `https://your-vercel-domain.vercel.app/**` · `https://your-custom-domain.com/**` |
+| Variable | Purpose |
+|----------|---------|
+| `NEXT_PUBLIC_SUPABASE_URL` | Supabase project URL |
+| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | Supabase anon public key |
+| `NEXT_PUBLIC_SITE_URL` | Canonical site URL for auth redirects |
 
-> **Note:** `NEXT_PUBLIC_SITE_URL` must match the domain you add to Supabase redirect URLs, otherwise the post-login redirect will fail.
+After deployment, update Supabase Authentication URL settings so the Site URL and Redirect URLs match the Vercel domain.
+
+The demo may depend on active Supabase and Vercel services. If a free-tier backend is paused, the source code and portfolio screenshots still document the product and architecture.
 
 ---
 
 ## Troubleshooting
 
-| Symptom | Likely cause | Fix |
-|---------|-------------|-----|
-| Blank page / no data | Missing env vars | Confirm `.env.local` has all three variables and restart `npm run dev` |
-| Redirect loop after login | Wrong `NEXT_PUBLIC_SITE_URL` | Make sure it matches the URL in Supabase → Authentication → Site URL |
-| `new row violates RLS` | Row Level Security | Each insert must include `user_id: user.id`; confirm the user is logged in |
-| Tasks from another user visible | RLS not applied | Re-run `supabase/schema.sql`; check policies in Supabase → Table Editor → Policies |
-| Supabase anon key error | Key copied incorrectly | Use the **anon** key, not the **service_role** key |
-| Auth email not arriving | Supabase email limits | Free tier has a 3 emails/hour cap; use a custom SMTP provider in production |
-| `Error: Cannot find module '@/...'` | Missing install | Run `npm install` |
+| Symptom | Likely Cause | Fix |
+|---------|--------------|-----|
+| Blank page or no data | Missing environment variables | Check `.env.local` and restart the dev server |
+| Redirect loop after login | Wrong `NEXT_PUBLIC_SITE_URL` | Match it with the Supabase Site URL |
+| Insert blocked by RLS | Missing or wrong user id | Confirm the user is authenticated and rows include `user_id` |
+| Other users' data appears | RLS policy issue | Re-run `supabase/schema.sql` and inspect Supabase policies |
+| Supabase key error | Wrong key copied | Use the anon public key, not the service role key |
 
 ---
 
-## Environment Variables Reference
+## What This Project Demonstrates
 
-| Variable | Required | Description |
-|----------|----------|-------------|
-| `NEXT_PUBLIC_SUPABASE_URL` | ✅ | Supabase project REST endpoint |
-| `NEXT_PUBLIC_SUPABASE_ANON_KEY` | ✅ | Public API key (safe to expose in browser) |
-| `NEXT_PUBLIC_SITE_URL` | ✅ | Canonical app URL — used for auth redirects |
-
-All three variables are public (`NEXT_PUBLIC_`) and safe to commit to Vercel's environment configuration. **Never commit `.env.local`** — it is listed in `.gitignore`.
+- Next.js App Router architecture
+- TypeScript-based UI and data modeling
+- Hebrew RTL product interface
+- Supabase Auth and RLS integration
+- Protected routes and session-aware layouts
+- Responsive data-heavy UI with table and card views
+- Dashboard UX with actionable productivity metrics
+- Clean component organization using shadcn/ui and Tailwind CSS
+- Production-oriented deployment configuration
 
 ---
 
-## Contributing
+## Future Improvements
 
-Contributions are welcome for bug fixes and small improvements.
-
-1. Fork the repository and create a feature branch:
-   ```bash
-   git checkout -b fix/your-description
-   ```
-2. Keep changes focused — one concern per PR.
-3. Use Hebrew strings for any new UI text (this is a Hebrew-first product).
-4. Run `npm run build` locally before opening a pull request — it must pass with zero TypeScript errors.
-5. Open a pull request against `main` with a clear description of what changed and why.
-
-For larger feature proposals, open an issue first to discuss the approach.
+- Add automated tests for core task and project flows
+- Add CI workflow for lint and production build checks
+- Add AI-assisted task suggestions and prioritization
+- Add collaboration features for shared projects
 
 ---
 
 ## License
 
-MIT — see [LICENSE](LICENSE) for details.
+MIT - see [LICENSE](LICENSE) for details.
