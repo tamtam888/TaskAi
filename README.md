@@ -6,12 +6,9 @@ The app is inspired by Monday-style task workflows, but keeps the product focuse
 
 This project demonstrates production-style frontend architecture, secure user-scoped data, Hebrew RTL UX, server/client separation in Next.js, and practical SaaS product thinking.
 
-## Links
+## Repository
 
-- Portfolio: https://tamtam888.github.io/MyPortfolio/
 - Repository: https://github.com/tamtam888/TaskAi
-
-Project screenshots and visual context are available in the portfolio.
 
 ---
 
@@ -155,7 +152,7 @@ Required Vercel environment variables:
 
 After deployment, update Supabase Authentication URL settings so the Site URL and Redirect URLs match the Vercel domain.
 
-The demo may depend on active Supabase and Vercel services. If a free-tier backend is paused, the source code and portfolio screenshots still document the product and architecture.
+The demo may depend on active Supabase and Vercel services. If a free-tier backend is paused, the source code still documents the product and architecture.
 
 ---
 
