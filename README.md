@@ -8,6 +8,7 @@ This project demonstrates production-style frontend architecture, secure user-sc
 
 ## Repository
 
+- Live Demo: https://task-1mezh0h1x-tamar-karwans-projects.vercel.app/login
 - Repository: https://github.com/tamtam888/TaskAi
 
 ---
