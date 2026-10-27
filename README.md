@@ -1,4 +1,6 @@
-# TaskAi - Smart Task Management SaaS
+# TaskAi — Smart Task Management SaaS
+
+**Next.js · TypeScript · Supabase · Hebrew RTL · Productivity dashboards**
 
 **TaskAi** is a Hebrew-first RTL task management SaaS built with Next.js 14, TypeScript, Supabase, Tailwind CSS, and shadcn/ui.
 
